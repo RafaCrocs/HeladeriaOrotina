@@ -1,0 +1,571 @@
+*{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    background-color: #5a5757;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+}
+
+.navBarList {
+    list-style: none;
+    display: flex;
+    gap: 50px;
+    font-size: 20px;
+}
+
+.navBarItem {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+}
+
+
+.navBarLink {
+    color: white;
+    text-decoration: none;
+    background-color: #5a5757;
+}
+
+.btnCarrito {
+    background-color: rgb(121, 184, 121);
+    padding: 10px 20px;
+    color: white;
+    border: 2px solid white ;
+    font-size: 25px;
+}
+.btnHistorial {
+    background-color: rgb(121, 184, 121);
+    color: white;
+    border: 2px solid white ;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin: 10px;
+}
+
+.header {
+    background-color: #333;
+    padding: 20px;
+    text-align: center;
+    color: white;
+}
+.seccion {
+    text-align: center;
+}
+.contenedores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.caja {
+    border: 2px solid black;
+    text-align: center;
+    margin: auto;
+    border-radius: 20px;
+    overflow: hidden;
+    width: 160px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+.cajaOpciones {
+    border: 2px solid black;
+    text-align: center;
+    margin: auto;
+    border-radius: 20px;
+    overflow: hidden;
+    width: 120px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.caja.agregado {
+    background-color: rgb(121, 184, 121);
+    border: 4px solid rgb(94, 155, 94);
+}
+
+.nombreProductos {
+    padding: 10px;
+    font-size: large;
+    font-weight: bold;
+}
+
+.imagenPedido{
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+.btnAgregar{
+    padding: 10px;
+    background-color: rgb(107, 168, 107);
+    border: none;
+    width: 100%;
+    color: white;
+    letter-spacing: 5px;
+    font-size: large;
+    cursor: pointer;
+}
+
+.btnAgregarOpcion{
+    background-color: rgb(107, 168, 107);
+    border: none;
+    width: 100%;
+    color: white;
+    font-size: large;
+}
+
+.caja:has(.checkbox-batido:checked) {
+    background-color: rgb(121, 184, 121);
+}
+
+.btnAgregarBatidos {
+    margin: 30px 0;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+
+}
+.mostrarVentaEmergente {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.tituloOpciones {
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.ventaEmergente {
+    position: fixed;
+    width: 100%;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 2px solid black;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.opcionesVentanaEmergente {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btnCerrar{
+    background-color: rgb(185, 87, 87);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 20px;
+    font-size: 20px;
+}
+
+
+.tablaCarrito {
+    border-collapse: collapse;
+    width: 70%;
+    font-size: larger;
+    margin: 20px;
+}
+.tableHeader {
+    background-color: #333;
+    color: white;
+}
+
+td{
+    color: black;
+    border: 1px solid black;
+    text-align: center;
+    background-color: white;
+    padding: 10px;
+}
+
+.btnCantidad{
+    width: 50px;
+    padding: 5px;
+    font-size: larger;
+}
+
+#btnAumentar {
+    background-color: rgb(107, 168, 107);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+#btnDisminuir {
+    background-color: rgb(185, 87, 87);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+
+
+.btnEliminarLinea {
+    background-color: rgb(185, 87, 87);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+
+.columnItem {
+    padding: 5px 20px;
+}
+
+.columnaNota {
+    padding: 5px 100px;
+}
+
+
+
+.inputEnCarrito {
+    font-size: larger;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    width: 30%;
+}
+
+.inputEnTabla {
+    font-size: 18px;
+    padding: 5px;
+    border: 1px solid black;
+    width: 100%;
+}
+
+.cheakbox{
+    font-size: 25px;
+    margin: 10px;
+}
+
+.btnsCarrito {
+    margin: 10px 30px;
+    font-size: 25px;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+}
+
+.btnEnviarCarrito {
+    background-color: rgb(91, 151, 91);
+}
+
+.btnCerrarCarrito {
+    background-color: rgb(185, 87, 87);
+}
+
+
+.Americano {
+    background-image: url('Imagenes/Americano.png');
+}
+.Mokaccino{
+    background-image: url('Imagenes/Mocachino.png');
+}
+.Latte{
+    background-image: url('Imagenes/Latte.png');
+}
+.ChocolateCaliente{
+    background-image: url('Imagenes/ChocolateCaliente.png');
+}
+.Espresso{
+    background-image: url('Imagenes/Espresso.png');
+}
+.Macchiato{
+    background-image: url('Imagenes/Macchiato.png');
+}
+.Fresa{
+    background-image: url('Imagenes/Fresa.png');
+}
+.Piña{
+    background-image: url('Imagenes/Piña.png');
+}
+.Banano{
+    background-image: url('Imagenes/Banano.png');
+}
+.Mango{
+    background-image: url('Imagenes/Mango.png');
+}
+.Naranja{
+    background-image: url('Imagenes/Naranja.png');
+}
+.Papaya{
+    background-image: url('Imagenes/Papaya.png');
+}
+.Kiwi{
+    background-image: url('Imagenes/Kiwi.png');
+}
+.Sandia{
+    background-image: url('Imagenes/Sandia.png');
+}
+.Mora{
+    background-image: url('Imagenes/Mora.png');
+}
+
+.Maracuya{
+    background-image: url('Imagenes/Maracuya.png');
+}
+.Melocoton{
+    background-image: url('Imagenes/Melocoton.png');
+}
+.Coco{
+    background-image: url('Imagenes/Coco.png');
+}
+.Arandano{
+    background-image: url('Imagenes/Arandano.png');
+}
+.Guanabana{
+    background-image: url('Imagenes/Guanabana.png');
+}
+
+.Capuchino{
+    background-image: url('Imagenes/Capuchino.png');
+}
+
+.MilkShake{
+    background-image: url('Imagenes/MilkShake.png');
+}
+
+.MatchaRegular{
+    background-image: url('Imagenes/Matcha.png');
+}
+.Matcha{
+    background-image: url('Imagenes/Matcha.png');
+}
+
+.Regular{
+    background-image: url('Imagenes/LecheEntera.png');
+}
+.SemiDescremada{
+    background-image: url('Imagenes/LecheRegular.png');
+}
+.Delactomy{
+    background-image: url('Imagenes/LecheDelactomy.png');
+}
+
+.Almendra{
+    background-image: url('Imagenes/LecheAlmendras.png');
+}
+
+.Avena{
+    background-image: url('Imagenes/LecheAvena.png');
+}
+
+.Vainilla{
+    background-image: url('Imagenes/Vainilla.png');
+}
+.Caramelo{
+    background-image: url('Imagenes/Caramelo.png');
+}
+.CremaAvellanas{
+    background-image: url('Imagenes/CremaAvellanas.png');
+}
+.CremaIrlandesa{
+    background-image: url('Imagenes/CremaIrlandesa.png');
+}
+.ShakeCoffeeHouse{
+    background-image: url('Imagenes/ShakeCoffeeHouse.png');
+}
+.IcedChocolate{
+    background-image: url('Imagenes/IcedChocolate.png');
+}
+.Frappuccino{
+    background-image: url('Imagenes/Frappuccino.png');
+}
+.Affogato{
+    background-image: url('Imagenes/Affogato.png');
+}
+.ColdBrew{
+    background-image: url('Imagenes/ColdBrew.png');
+}
+.IcedLatte{
+    background-image: url('Imagenes/IcedLatte.png');
+}
+.HeladoVainilla{
+    background-image: url('Imagenes/HeladoVainilla.png');
+}
+.HeladoFresa{
+    background-image: url('Imagenes/HeladoFresa.png');
+}
+.HeladoChocolate{
+    background-image: url('Imagenes/HeladoChocolate.png');
+}
+.HeladoChocochips{
+    background-image: url('Imagenes/HeladoChocochips.png');
+}
+.HeladoGalleta{
+    background-image: url('Imagenes/HeladoGalleta.png');
+}
+.HeladoRonConFrutas{
+    background-image: url('Imagenes/RonconFrutas.png');
+}
+.HeladoRonConPasas{
+    background-image: url('Imagenes/RonconPasas.png');
+}
+.HeladoCoco{
+    background-image: url('Imagenes/Coco.png');
+}
+.HeladoCarameloVainilla{
+    background-image: url('Imagenes/CarameloVainilla.png');
+}
+.HeladoNaranjaPiña{
+    background-image: url('Imagenes/NaranjaPiña.png');
+}
+.HeladoCombinado{
+    background-image: url('Imagenes/Combinado.png');
+}
+.HeladoNapolitano{
+    background-image: url('Imagenes/Napolitano.png');
+}
+.HeladoFresaNieve{
+    background-image: url('Imagenes/FresaNieve.png');
+}
+.HeladoChicle{
+    background-image: url('Imagenes/Chicle.png');
+}
+.EspressoDoble{
+    background-image: url('Imagenes/EspressoDoble.png');
+}
+.Cortado{
+    background-image: url('Imagenes/Cortado.png');
+}
+.FlatWhite{
+    background-image: url('Imagenes/FlatWhite.png');
+}
+.IcedAmericano{
+    background-image: url('Imagenes/IcedAmericano.png');
+}
+.ColdBrewLatte{
+    background-image: url('Imagenes/ColdBrewLatte.png');
+}
+.MatchaMango{
+    background-image: url('Imagenes/MatchaMango.png');
+}
+.MatchaFresa{
+    background-image: url('Imagenes/MatchaFresa.png');
+}
+.JugoVerde{
+    background-image: url('Imagenes/JugoVerde.png.jpeg');
+}
+.Refresher{
+    background-image: url('Imagenes/Refresher.png.jpeg');
+}
+.Granizado{
+    background-image: url('Imagenes/Granizado.jpeg');
+}
+.Taro{
+    background-image: url('Imagenes/Taro.jpeg');
+}
+.ChocolateOscuro{
+    background-image: url('Imagenes/ChocolateNegro.png');
+}
+.Nuez{
+    background-image: url('Imagenes/Nuez.png');
+}
+.Menta{
+    background-image: url('Imagenes/Menta.png');
+}
+.Amaretto{
+    background-image: url('Imagenes/Amaretto.png');
+}
+
+.Pequeño{
+    background-image: url('Imagenes/VasoPequeño.png');
+}
+.Grande{
+    background-image: url('Imagenes/VasoGrande.png');
+}
+.ManzanaVerde{
+    background-image: url('Imagenes/ManzanaVerde.png');
+}
+.Limonada{
+    background-image: url('Imagenes/Limonada.png');
+}
+.EnLimonada{
+    background-image: url('Imagenes/Limon.png');
+}
+.EnjugoNaranja{
+    background-image: url('Imagenes/Naranja.png');
+}
+.EnsaladaFrutas{
+    background-image: url('Imagenes/EnsaladaFrutas.png');
+}
+.BananaSplit{
+    background-image: url('Imagenes/BananaSplit.png');
+}
+.Crepa{
+    background-image: url('Imagenes/Crepa.png');
+}
+.Sundae{
+    background-image: url('Imagenes/Sundae.png');
+}
+.LimonadaRegular{
+    background-image: url('Imagenes/Limonada.png');
+}
+.LimonadadeFresa{
+    background-image: url('Imagenes/LimonadaFresa.png');
+}
+.SiropeFresa{
+    background-image: url('Imagenes/SiropeFresa.png');
+}
+.SiropeCaramelo{
+    background-image: url('Imagenes/SiropeCaramelo.png');
+}
+.SiropeChocolate{
+    background-image: url('Imagenes/SiropeChocolate.png');
+}
+.MatchaCaliente{
+    background-image: url('Imagenes/MatchaCaliente.png');
+}
+.PiñaColada{
+    background-image: url('Imagenes/PiñaColada.png');
+}
+.ConTapioca{
+    background-image: url('Imagenes/Tapioca.png');
+}
+.BubbleFresa{
+    background-image: url('Imagenes/BubbleFresa.png');
+}
+.BubbleMango{
+    background-image: url('Imagenes/BubbleMango.png');
+}
+.BubbleArandano{
+    background-image: url('Imagenes/BubbleArandano.png');
+}
+.BubbleMaracuya{
+    background-image: url('Imagenes/BubbleMaracuya.png');
+}
+.BubbleSandia{
+    background-image: url('Imagenes/BubbleSandia.png');
+}
+.BubbleMelocoton{
+    background-image: url('Imagenes/BubbleMelocoton.png');
+}
+
