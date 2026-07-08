@@ -5,6 +5,7 @@
     box-sizing: border-box;
 }
 
+
 .navBar {
     display: flex;
     justify-content: space-between;
@@ -48,6 +49,18 @@
     font-size: 20px;
     padding: 10px 20px;
     margin: 10px;
+}
+.btnCocina {
+    background-color: rgb(121, 184, 121);
+    color: white;
+    border: 2px solid white ;
+    font-size: 20px;
+}
+.cocinaLink {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
 }
 
 .header {
@@ -466,10 +479,10 @@ td{
     background-image: url('Imagenes/ColdBrewLatte.png');
 }
 .MatchaMango{
-    background-image: url('Imagenes/MatchaMango.png');
+    background-image: url('Imagenes/MatchaMango.jpeg');
 }
 .MatchaFresa{
-    background-image: url('Imagenes/MatchaFresa.png');
+    background-image: url('Imagenes/MatchaFresa.jpeg');
 }
 .JugoVerde{
     background-image: url('Imagenes/JugoVerde.png.jpeg');
@@ -495,7 +508,6 @@ td{
 .Amaretto{
     background-image: url('Imagenes/Amaretto.png');
 }
-
 .Pequeño{
     background-image: url('Imagenes/VasoPequeño.png');
 }
@@ -515,16 +527,16 @@ td{
     background-image: url('Imagenes/Naranja.png');
 }
 .EnsaladaFrutas{
-    background-image: url('Imagenes/EnsaladaFrutas.png');
+    background-image: url('Imagenes/EnsaladaFrutas.jpeg');
 }
 .BananaSplit{
-    background-image: url('Imagenes/BananaSplit.png');
+    background-image: url('Imagenes/BananaSplit.jpeg');
 }
 .Crepa{
     background-image: url('Imagenes/Crepa.png');
 }
 .Sundae{
-    background-image: url('Imagenes/Sundae.png');
+    background-image: url('Imagenes/Sundae.jpeg');
 }
 .LimonadaRegular{
     background-image: url('Imagenes/Limonada.png');
@@ -568,4 +580,66 @@ td{
 .BubbleMelocoton{
     background-image: url('Imagenes/BubbleMelocoton.png');
 }
-
+.DirtyChai{
+    background-image: url('Imagenes/DirtyChai.jpeg');
+}
+.TaroEspumoso{
+    background-image: url('Imagenes/TaroEspumoso.jpeg');
+}
+.FrappeOreo{
+    background-image: url('Imagenes/FrappeOreo.jpeg');
+}
+.DragonFresh{
+    background-image: url('Imagenes/DragonFresh.jpeg');
+}
+.EsmeraldaFresh{
+    background-image: url('Imagenes/EsmeraldaFresh.jpeg');
+}
+.TropicalSunnet{
+    background-image: url('Imagenes/TropicalSunnet.jpeg');
+}
+.CremaConFresas{
+    background-image: url('Imagenes/CremaConFresas.jpeg');
+}
+.SandwichCubano{
+    background-image: url('Imagenes/SandwichCubano.jpeg');
+}
+.LapizJamonQueso{
+    background-image: url('Imagenes/LapizJamonQueso.jpeg');
+}
+.PaniniOregano{
+    background-image: url('Imagenes/PaniniOregano.jpeg');
+}
+.Croissant{
+    background-image: url('Imagenes/Croissant.jpeg');   
+}
+.SandwichCubano{
+    background-image: url('Imagenes/SandwichCubano.jpeg');
+}
+.EspumaVainilla{
+    background-image: url('Imagenes/EspumaVainilla.jpeg');
+}
+.EspumaCoco{
+    background-image: url('Imagenes/EspumaCoco.jpg');
+}
+.OtraEspuma{
+    background-image: url('Imagenes/OtraEspuma.png');
+}
+.MoninFresa{
+    background-image: url('Imagenes/MoninFresa.png');
+}
+.MoninMango{
+    background-image: url('Imagenes/MoninMango.png');
+}
+.MoninMaracuya{
+    background-image: url('Imagenes/MoninMaracuya.png');
+}
+.MoninPitahaya{
+    background-image: url('Imagenes/MoninPitahaya.png');
+}
+.Pitahaya{
+    background-image: url('Imagenes/Pitahaya.png');
+}
+.BubblePitahaya{
+    background-image: url('Imagenes/BubblePitahaya.png');
+}

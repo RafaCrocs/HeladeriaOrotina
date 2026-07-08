@@ -363,6 +363,11 @@ async function agregarFrio(nombre) {
         const toppingTaro = await mostrarOpciones(opcionesToppingTaro);
         bebidaEnProgreso.saborizante = (toppingTaro || "");
     }
+    if(producto.llevaEspuma) {
+        const espuma = await mostrarOpciones(opcionesEspuma);
+        bebidaEnProgreso.saborizante += ", " + "<br>" + ("*" + (espuma || ""));
+    }
+    
     carrito.push(bebidaEnProgreso);
     restablecerBebidaEnProgreso();
     cerrarVentanaEmergente();

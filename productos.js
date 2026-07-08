@@ -43,19 +43,26 @@ const productos = {
             { nombre: "Frappuccino", imagen:"Frappuccino", llevaLeche: true, llevaSaborizantes: true },
             { nombre: "Iced Chocolate", imagen:"IcedChocolate", llevaLeche: true, llevaHelado: true },
             { nombre: "MilkShake", imagen:"MilkShake", llevaHelado: true },
-            { nombre: "Matcha", imagen:"Matcha", llevaLeche: true, opcionesMatcha: true },
+            { nombre: "Matcha", imagen:"Matcha", llevaLeche: true, opcionesMatcha: true, llevaEspuma: true },
             { nombre: "Jugo Verde", imagen:"JugoVerde", opcionesJugoVerde: true, llevaSaborizantesNaturales: true },
             { nombre: "Granizado", imagen:"Granizado", llevaHelado: true },
             { nombre: "Refresher", imagen:"Refresher", opcionesRefresher: true, llevatoppingsRefresher: true },
             { nombre: "Taro", imagen:"Taro", llevaToppingTaro: true },
             { nombre: "Limonada", imagen:"Limonada", opcionesLimonada: true },
             { nombre: "Piña Colada", imagen:"PiñaColada", llevaLeche: true },
+            {nombre: "Dirty Chai", imagen:"DirtyChai", llevaLeche: true},
+            {nombre: "Taro Espumoso", imagen:"TaroEspumoso", llevaLeche: true, llevaToppingTaro: true, llevaEspuma: true},
+            {nombre: "Frappe Oreo", imagen:"FrappeOreo", llevaLeche: true, llevaSaborizantes: true },
+            {nombre: "Dragon Fresh", imagen:"DragonFresh"},
+            {nombre: "Esmeralda Fresh", imagen:"EsmeraldaFresh"},
+            {nombre: "Tropical Sunnet", imagen:"TropicalSunnet"},
     ],
     especiales:[
         { nombre: "Ensalada de Frutas", imagen:"EnsaladaFrutas", llevaHelado: true },
         { nombre: "Banana Split", imagen:"BananaSplit", llevaHelado: true },
         { nombre: "Crepa", imagen:"Crepa", opcionesCrepa: true, llevaHelado: true },
         { nombre: "Sundae", imagen:"Sundae", llevaHelado: true, llevaSirope: true },
+        { nombre: "Crema con Fresas", imagen:"CremaConFresas", llevaSirope: true },
     ]
 }
 
@@ -67,14 +74,16 @@ const opcionesHelados = ["Helado", "Sin Helado", "Helado Vainilla", "Helado Choc
 const opcionesMatcha = ["Matcha...", "Matcha Regular", "Matcha Mango", "Matcha Fresa"];
 const opcionesJugoVerde = ["Jugo Verde...", "En Agua", "En Limonada", "En jugo Naranja"];
 const opcionesSaborizantesNaturales = ["Saborizante Natural", "Sin Saborizante", "Piña", "Manzana Verde"];
-const opcionesRefresher = ["Refresher de...", "Fresa", "Mango", "Maracuya", "Arandano", "Sandia"];
-const opcionestoppingsRefresher = ["Topping", "Sin topping", "Bubble Fresa", "Bubble Mango", "Bubble Maracuya", "Bubble Arandano", "Bubble Sandia", "Bubble Melocoton"];
+const opcionesRefresher = ["Refresher de...", "Fresa", "Mango", "Maracuya", "Arandano", "Sandia", "Pitahaya"];
+const opcionestoppingsRefresher = ["Topping", "Sin topping", "Bubble Fresa", "Bubble Mango", "Bubble Maracuya", "Bubble Arandano", "Bubble Sandia", "Bubble Melocoton", "Bubble Pitahaya"];
 const opcionesToppingTaro = ["Topping", "Sin Topping", "Con Tapioca"];
 const opcionesLimonada = ["Limonada...", "Limonada Regular", "Limonada de Fresa"];
 const BatidoRapidoAgua = ["Numero de Batido...", "1", "2", "3", "4", "5", "6"];
 const BatidoRapidoLeche = ["Numero de Batido...", "1", "2", "3", "4", "5"];
 const opcionesCrepa = ["Numero de Crepa...", "1", "2", "3", "4"];
 const opcionesSiropes = ["Sirope...", "Sin Sirope", "Sirope Fresa", "Sirope Caramelo", "Sirope Chocolate"];
+const opcionesEspuma = ["Opcion de Espuma","Sin Espuma", "Espuma Coco", "Espuma Vainilla", "Monin Fresa", "Monin Mango", "Monin Maracuya", "Monin Pitahaya", "Otra Espuma"];
+
 
 
 function buscarProducto(nombre) {
