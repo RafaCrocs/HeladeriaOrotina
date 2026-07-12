@@ -4,25 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css?v=1.0.3">
+    <script src="productosCocina.js?v=1.0.0"></script>
+    <script src="scriptCocina.js?v=1.0.0" defer></script>
     <title>Cocina Orotina</title>
 </head>
 <body>
     
-</body>
     <nav class="navBar">
-        <p style="color: white;">v=1.0.3</p>
+        <p style="color: white;">v=1.0.0</p>
         <button class="btnCocina"><a href="index.html" class="cocinaLink">Heladeria</a></button>
         <ul class="navBarList">
             
             <li class="navBarItem"><button class="navBarLink btnCarrito" onclick="verCarrito()">CARRITO</button></li>
         </ul>
-        
         <button class="btnHistorial" onclick="verHistorial()">Historial</button>
+    </nav>
+    <main>
 
         <section class="seccion">
             <h2 class="header">Cocina</h2>
             <div  class="contenedores" id="contenedorCocina">
             </div>
         </section>
-    </nav>
+
+        <!-- Ventana de opciones -->
+        <div class="mostrarVentaEmergente" id="mostrarVentanaEmergente"> 
+            <div class="ventaEmergente" id="ventaEmergente">
+                <div id="tituloVentanaEmergente"></div>
+                <div class="opcionesVentanaEmergente" id="opcionesVentanaEmergente">
+                </div>
+                <button class="btnCerrar" onclick="cerrarVentanaEmergente()">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- Ver Carrito -->
+        <div class="mostrarVentaEmergente" id="mostrarCarrito">
+            <div class="ventaEmergente" id="ventaEmergente">
+                <h2>Pedido</h2>
+                <p class="carritoVacio" id="carritoVacio">Todavia no has agregado productos.</p>
+                <div class="contenedores contenedoresCarrito" id="carritoCards"></div>
+
+                <div class="selectorBanderin">
+                    <p class="subtituloCarrito">Color del banderin</p>
+                    <div class="opcionesBanderin" id="opcionesBanderin">
+                        <div class="btnColorBanderin colorRojo" data-color="Rojo">Rojo</div>
+                        <div class="btnColorBanderin colorAzul" data-color="Azul">Azul</div>
+                        <div class="btnColorBanderin colorVerde" data-color="Verde">Verde</div>
+                        <div class="btnColorBanderin colorAmarillo" data-color="Amarillo">Amarillo</div>
+                    </div>
+                    <p class="estadoBanderin" id="estadoBanderin">Sin color seleccionado</p>
+                </div>
+
+                <input type="text" id="notaPedido" class="inputEnCarrito" placeholder="Nota General">
+                <div class="cheakbox">
+                    <input type="checkbox" id="paraLlevar" name="tipoPedido" value="Para Llevar">
+                    <label for="paraLlevar">Para llevar</label>
+                </div>
+                <div class="botonesCarrito">
+                    <button class="btnEnviarCarrito btnsCarrito" id="btnConfirmarEnvio" onclick="enviarPedido()">Enviar Pedido</button>
+                    <button class="btnCerrarCarrito btnsCarrito" onclick="cerrarCarrito()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
 </html>

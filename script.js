@@ -76,11 +76,41 @@ function mostrarOpciones(opciones, contenedor = "opcionesVentanaEmergente") {
     });
 }
 
-function cerrarVentanaEmergente() {
+// Mostrar opciones para seleccionar mas de un producto
+function mostrarOpcionesMultiples(opciones, contenedor = "opcionesVentanaEmergente") {
+    const ventanaEmergente = document.getElementById("mostrarVentanaEmergente");
+    ventanaEmergente.style.display = "block";
+    return new Promise(resolve => {
+        const section = document.getElementById(contenedor);
+        const titulo = opciones[0] || "Opciones";
+        const items = opciones.slice(1);
+        document.getElementById("tituloVentanaEmergente").innerHTML = `<h3 class="tituloOpciones">${titulo}</h3>`;
+        section.innerHTML = items.map(o => `
+            <label for="${o}" class="caja">
+                <p class="nombreProductos">${o}</p>
+                <div for="${o}" class="imagenPedido ${o.split(' ').join('')}"></div>
+                <input id="${o}" type="checkbox" class="checkbox-batido" value="${o}">
+            </label>
+        `).join('');
+        section.innerHTML += `<button class="btnConfirmar" id="btnConfirmarMultiples">CONFIRMAR</button>`;
+        const btnConfirmar = document.getElementById("btnConfirmarMultiples");
+        btnConfirmar.onclick = () => {
+            const seleccionados = Array.from(section.querySelectorAll('.checkbox-batido:checked')).map(cb => cb.value);
+            limpiarVentanaEmergente();
+            resolve(seleccionados);
+        };
+    });
+}
+
+function limpiarVentanaEmergente() {
     const ventanaEmergente = document.getElementById("mostrarVentanaEmergente");
     ventanaEmergente.style.display = "none";
     const opcionesContainer = document.getElementById("opcionesVentanaEmergente");
     opcionesContainer.innerHTML = "";
+}
+
+function cerrarVentanaEmergente() {
+    limpiarVentanaEmergente();
     restablecerBebidaEnProgreso();
 }
 
@@ -254,6 +284,12 @@ function efectoAgregado(nombre) {
     }
 }
 
+function obtenerSegundasPalabras(lista) {
+    return (lista || [])
+        .map((item) => item.trim().split(/\s+/)[1])
+        .filter(Boolean);
+}
+
 
 async function agregarCafe(nombre) {
     const producto = buscarProducto(nombre);
@@ -381,13 +417,29 @@ async function agregarEspecial(nombre) {
 
     if (producto.opcionesCrepa) {
         const crepa = await mostrarOpciones(opcionesCrepa);
-        bebidaEnProgreso.bebida += " " + (crepa || "");
+        bebidaEnProgreso.bebida += " " + (crepa + "<br>" || "");
+        console.log("Crepa seleccionada:", bebidaEnProgreso.bebida);
+        
+        if(crepa === "Personalizada") {
+            const helado = await mostrarOpcionesMultiples(opcionesHelados);
+            const heladoSeleccionado = helado.length > 0 ? obtenerSegundasPalabras(helado).join(", ") : "Sin Helado";
+            bebidaEnProgreso.bebida += " Helados: " + heladoSeleccionado;
+            
+            const frutas = await mostrarOpcionesMultiples(opcionesFrutas);
+            const frutasSeleccionadas = frutas.length > 0 ? frutas.join(", ") : "Sin Frutas";
+            bebidaEnProgreso.leche += " Frutas: " + frutasSeleccionadas;
+
+            const siropes = await mostrarOpcionesMultiples(opcionesSiropesCrepa);
+            const siropesSeleccionados = siropes.length > 0 ? siropes.join(", ") : "Sin Sirope";
+            bebidaEnProgreso.saborizante += " Siropes: " + siropesSeleccionados;
+        }
+        
     }
-    if (producto.llevaHelado) {
+    if (producto.llevaHelado && !bebidaEnProgreso.bebida.includes("Personalizada")) {
         const helado = await mostrarOpciones(opcionesHelados);
         bebidaEnProgreso.leche = helado || "";
     }
-    if (producto.llevaSirope) {
+    if (producto.llevaSirope && !bebidaEnProgreso.bebida.includes("Personalizada")) {
         const sirope = await mostrarOpciones(opcionesSiropes);
         bebidaEnProgreso.saborizante = (sirope || "");
     }

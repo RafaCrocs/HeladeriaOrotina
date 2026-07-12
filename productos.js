@@ -80,9 +80,11 @@ const opcionesToppingTaro = ["Topping", "Sin Topping", "Con Tapioca"];
 const opcionesLimonada = ["Limonada...", "Limonada Regular", "Limonada de Fresa"];
 const BatidoRapidoAgua = ["Numero de Batido...", "1", "2", "3", "4", "5", "6"];
 const BatidoRapidoLeche = ["Numero de Batido...", "1", "2", "3", "4", "5"];
-const opcionesCrepa = ["Numero de Crepa...", "1", "2", "3", "4"];
+const opcionesCrepa = ["Numero de Crepa...", "1", "2", "3", "4", "Personalizada"];
 const opcionesSiropes = ["Sirope...", "Sin Sirope", "Sirope Fresa", "Sirope Caramelo", "Sirope Chocolate"];
 const opcionesEspuma = ["Opcion de Espuma","Sin Espuma", "Espuma Coco", "Espuma Vainilla", "Monin Fresa", "Monin Mango", "Monin Maracuya", "Monin Pitahaya", "Otra Espuma"];
+const opcionesFrutas = ["Fruta...", "Sin Fruta", "Fresa", "Banano", "Arandano", "Sandia", "Melocoton", "Pitahaya"];
+const opcionesSiropesCrepa = ["Sirope...", "Sin sirope", "Leche Condensada", "Nutella", "Sirope Caramelo", "Sirope Chocolate", "Sirope Dulce de Leche"];
 
 
 

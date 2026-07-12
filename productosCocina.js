@@ -1,15 +1,15 @@
 productosCocina = [
-    { nombre: "Huevo ", imagen:"Huevo" },
-    { nombre: "Tortilla ", imagen:"Tortilla" },
-    { nombre: "Empanada ", imagen:"Empanada" },
-    { nombre: "Sandwich ", imagen:"Sandwich" },
+    { nombre: "Huevo", imagen:"Huevo", opcionesHuevo: true },
+    { nombre: "Tortilla", imagen:"Tortilla" },
+    { nombre: "Empanada", imagen:"Empanada", opcionesEmpanada: true },
+    { nombre: "Sandwich", imagen:"Sandwich" },
 ]
 
 opcionesHuevo = [
     { nombre: "Huevo Frito", imagen:"HuevoFrito" },
-    { nombre: "Huevo Picado", imagen:"HuevoPicado" },
-    { nombre: "Huevo Duro", imagen:"HuevoDuro" },
+    { nombre: "Huevo Picado", imagen:"HuevoPicado" }
 ]
+
 
 opcionesEmpanada = [
     { nombre: "Empanada de Pollo", imagen:"EmpanadaPollo" },
@@ -17,6 +17,10 @@ opcionesEmpanada = [
     { nombre: "Empanada de Queso", imagen:"EmpanadaQueso" },
 ]
 
-function getProductosCocina(nombre) {
+
+extrasHuevo = ["Cebolla", "Tomate",]
+
+
+function BuscarProductosCocina(nombre) {
     return productosCocina.find(producto => producto.nombre === nombre);
 }
