@@ -88,6 +88,26 @@ async function iniciarEscuchaPedidos() {
     });
 }
 
+
+function iniciarTimerPedido(pedidoId, elementoTiempo) {
+    const inicio = Date.now();
+    const intervalo = setInterval(() => {
+        const transcurrido = Date.now() - inicio;
+        const minutos = Math.floor((transcurrido % 3600000) / 60000).toString().padStart(2, '0');
+        const segundos = Math.floor((transcurrido % 60000) / 1000).toString().padStart(2, '0');
+        elementoTiempo.textContent = `${minutos}:${segundos}`;
+    }, 1000);
+    timersActivos.set(pedidoId, intervalo);
+}
+
+function detenerTimerPedido(pedidoId) {
+    const intervalo = timersActivos.get(pedidoId);
+    if (intervalo) {
+        clearInterval(intervalo);
+        timersActivos.delete(pedidoId);
+    }
+}
+
 function actualizarContador() {
     const el = document.getElementById('contadorPedidos');
     if (el) el.textContent = contadorPedidos;
@@ -111,6 +131,7 @@ function crearTablaPedido(pedido, id) {
     const origenColor = '#2980b9';
     let htmlContent = `
         <div class="pedido-header">
+            <h2 class="tiempo" data-timer="${id}">00:00</h2>
             <h2>${pedido.Cliente || ''} - Pedido #${contadorPedidos}</h2>
             <h3 style="color: red;">${pedido.Tipo || ''}</h3>
             <h3 style="color: ${origenColor}; font-size: 1.3em;"> ${pedido.Origen ? '---- ' + pedido.Origen + ' ----' : ''} </h3>
@@ -156,6 +177,12 @@ function crearTablaPedido(pedido, id) {
     
     // Insertar al final tipo fila india
     contenedor.appendChild(divPedido);
+
+    // Iniciar el contador de tiempo para este pedido
+    const elementoTiempo = divPedido.querySelector(`[data-timer="${id}"]`);
+    if (elementoTiempo) {
+        iniciarTimerPedido(id, elementoTiempo);
+    }   
 }
 
 window.completarPedido = async function(boton) {

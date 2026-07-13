@@ -256,6 +256,8 @@ td{
     font-size: 20px;
     cursor: pointer;
     display: block;
+    width: 90%;
+    border-radius: 10px;
     
 }
 
@@ -760,4 +762,13 @@ td{
 }
 .BubblePitahaya{
     background-image: url('Imagenes/BubblePitahaya.png');
+}
+.Nutella{
+    background-image: url('Imagenes/Nutella.png');
+}
+.LecheCondensada{
+    background-image: url('Imagenes/LecheCondensada.png');
+}
+.SiropeDulcedeLeche{
+    background-image: url('Imagenes/DulceDeLeche.png');
 }

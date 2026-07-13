@@ -80,3 +80,10 @@ th, td {
     border: none;
     cursor: pointer;
 }
+
+.tiempo {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: right;
+}
