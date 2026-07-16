@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css?v=1.0.3">
     <script src="productosCocina.js?v=1.0.0"></script>
-    <script src="scriptCocina.js?v=1.0.0" defer></script>
+    <script type="module" src="scriptCocina.js?v=1.0.1"></script>
     <title>Cocina Orotina</title>
 </head>
 <body>
@@ -47,19 +47,15 @@
                 <div class="selectorBanderin">
                     <p class="subtituloCarrito">Color del banderin</p>
                     <div class="opcionesBanderin" id="opcionesBanderin">
-                        <div class="btnColorBanderin colorRojo" data-color="Rojo">Rojo</div>
-                        <div class="btnColorBanderin colorAzul" data-color="Azul">Azul</div>
-                        <div class="btnColorBanderin colorVerde" data-color="Verde">Verde</div>
-                        <div class="btnColorBanderin colorAmarillo" data-color="Amarillo">Amarillo</div>
+                        <div class="btnColorBanderin colorRojo" data-color="Rojo" onclick="seleccionarColorBanderin(this)">Rojo</div>
+                        <div class="btnColorBanderin colorAzul" data-color="Azul" onclick="seleccionarColorBanderin(this)">Azul</div>
+                        <div class="btnColorBanderin colorVerde" data-color="Verde" onclick="seleccionarColorBanderin(this)">Verde</div>
+                        <div class="btnColorBanderin colorAmarillo" data-color="Amarillo" onclick="seleccionarColorBanderin(this)">Amarillo</div>
                     </div>
                     <p class="estadoBanderin" id="estadoBanderin">Sin color seleccionado</p>
                 </div>
 
                 <input type="text" id="notaPedido" class="inputEnCarrito" placeholder="Nota General">
-                <div class="cheakbox">
-                    <input type="checkbox" id="paraLlevar" name="tipoPedido" value="Para Llevar">
-                    <label for="paraLlevar">Para llevar</label>
-                </div>
                 <div class="botonesCarrito">
                     <button class="btnEnviarCarrito btnsCarrito" id="btnConfirmarEnvio" onclick="enviarPedido()">Enviar Pedido</button>
                     <button class="btnCerrarCarrito btnsCarrito" onclick="cerrarCarrito()">Cerrar</button>

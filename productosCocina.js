@@ -18,7 +18,7 @@ opcionesEmpanada = [
 ]
 
 
-extrasHuevo = ["Cebolla", "Tomate",]
+extrasHuevo = ["Cebolla", "Tomate", "Jamon"]
 
 
 function BuscarProductosCocina(nombre) {

@@ -1,3 +1,5 @@
+import { database, ref, set, push } from './firebase.js';
+
 function renderProductos(productos, contenedor) {
 	const section = document.getElementById(contenedor);
 	section.innerHTML = productos.map((producto) => `
@@ -10,10 +12,8 @@ function renderProductos(productos, contenedor) {
 }
 
 const estadoSeleccionCocina = {
-	ultimoProducto: null,
 	opcionHuevo: null,
 	opcionEmpanada: null,
-	ultimaOpcion: null,
 	colorBanderin: '',
 };
 
@@ -109,7 +109,6 @@ function crearItemOrden(producto, opcionSeleccionada = null, extrasSeleccionados
 
 function agregarItemALaOrden(itemOrden) {
 	ordenCocina.push(itemOrden);
-	estadoSeleccionCocina.ultimaOpcion = itemOrden;
 	renderCarritoCocina();
 }
 
@@ -127,7 +126,6 @@ function renderCarritoCocina() {
 			<p class="nombreProductos">${item.opcion}</p>
 			<div class="imagenPedido ${item.imagen}"></div>
 			<div class="detalleCarrito">
-				<p class="textoSecundario">Base: ${item.producto}</p>
 				<p class="textoSecundario">Extras: ${item.extras.length ? item.extras.join(', ') : 'Sin extras'}</p>
 			</div>
 			<button class="btnCerrar btnEliminarItemCocina" onclick="eliminarItemCocina('${item.id}')">Eliminar</button>
@@ -146,26 +144,32 @@ function eliminarItemCocina(idItem) {
 	renderCarritoCocina();
 }
 
-function seleccionarColorBanderin(color) {
-	estadoSeleccionCocina.colorBanderin = color;
+function seleccionarColorBanderin(colorOElemento) {
+	const colorSeleccionado = typeof colorOElemento === 'string'
+		? colorOElemento
+		: colorOElemento?.dataset?.color || colorOElemento?.textContent?.trim() || '';
+
+	if (!colorSeleccionado) {
+		return;
+	}
+
+	estadoSeleccionCocina.colorBanderin = colorSeleccionado;
 
 	document.querySelectorAll('.btnColorBanderin').forEach((boton) => {
-		const estaActivo = boton.textContent.trim() === color;
-		boton.classList.toggle('activo', estaActivo);
+		const colorBoton = boton.dataset.color || boton.textContent.trim();
+		boton.classList.toggle('activo', colorBoton === colorSeleccionado);
 	});
 
 	const estadoBanderin = document.getElementById('estadoBanderin');
 	if (estadoBanderin) {
-		estadoBanderin.textContent = `Banderin seleccionado: ${color}`;
+		estadoBanderin.textContent = `Banderin seleccionado: ${colorSeleccionado}`;
 	}
 }
 
 function limpiarPedidoCocina() {
 	ordenCocina.length = 0;
-	estadoSeleccionCocina.ultimoProducto = null;
 	estadoSeleccionCocina.opcionHuevo = null;
 	estadoSeleccionCocina.opcionEmpanada = null;
-	estadoSeleccionCocina.ultimaOpcion = null;
 	estadoSeleccionCocina.colorBanderin = '';
 
 	const notaPedido = document.getElementById('notaPedido');
@@ -175,11 +179,6 @@ function limpiarPedidoCocina() {
 	if (notaPedido) {
 		notaPedido.value = '';
 	}
-
-	if (paraLlevar) {
-		paraLlevar.checked = false;
-	}
-
 	if (estadoBanderin) {
 		estadoBanderin.textContent = 'Sin color seleccionado';
 	}
@@ -213,27 +212,69 @@ function cerrarCarrito() {
 }
 
 function enviarPedido() {
+	const btnConfirmarEnvio = document.getElementById('btnConfirmarEnvio');
+	if (btnConfirmarEnvio) {
+		if (btnConfirmarEnvio.disabled) return;
+		btnConfirmarEnvio.disabled = true;
+		btnConfirmarEnvio.innerText = 'Enviando...';
+	}
+
 	if (ordenCocina.length === 0) {
 		alert('Agrega productos antes de enviar el pedido.');
+		if (btnConfirmarEnvio) {
+			btnConfirmarEnvio.disabled = false;
+			btnConfirmarEnvio.innerText = 'Enviar Pedido';
+		}
 		return;
 	}
 
 	if (!estadoSeleccionCocina.colorBanderin) {
 		alert('Selecciona el color del banderin antes de enviar el pedido.');
+		if (btnConfirmarEnvio) {
+			btnConfirmarEnvio.disabled = false;
+			btnConfirmarEnvio.innerText = 'Enviar Pedido';
+		}
 		return;
 	}
 
+	const horaCostaRica = new Date().toLocaleString('es-CR', {
+		timeZone: 'America/Costa_Rica',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: false,
+	});
+
+	const pedidos = ordenCocina.map((item) => ({
+		PedidoPrincipal: item.opcion,
+		Extra: [...item.extras],
+	}));
+
 	const pedido = {
-		colorBanderin: estadoSeleccionCocina.colorBanderin,
-		nota: document.getElementById('notaPedido')?.value || '',
-		paraLlevar: document.getElementById('paraLlevar')?.checked || false,
-		items: [...ordenCocina],
+		Banderin: estadoSeleccionCocina.colorBanderin,
+		Hora: horaCostaRica,
+		Pedidos: pedidos,
 	};
 
-	console.log('Pedido cocina:', pedido);
-	alert(`Pedido listo con banderin ${pedido.colorBanderin}.`);
-	limpiarPedidoCocina();
-	cerrarCarrito();
+	const pedidoRef = ref(database, 'Orotina/Cocina');
+	const nuevoPedido = push(pedidoRef);
+
+	set(nuevoPedido, pedido)
+		.then(() => {
+			console.log('Pedido cocina enviado:', pedido);
+			limpiarPedidoCocina();
+			cerrarCarrito();
+		})
+		.catch((error) => {
+			console.error('Error al enviar pedido de cocina a Firebase:', error);
+			alert('No se pudo enviar el pedido. Intenta de nuevo.');
+		})
+		.finally(() => {
+			if (btnConfirmarEnvio) {
+				btnConfirmarEnvio.disabled = false;
+				btnConfirmarEnvio.innerText = 'Enviar Pedido';
+			}
+		});
 }
 
 function verHistorial() {
@@ -241,12 +282,11 @@ function verHistorial() {
 }
 
 async function agregarProducto(nombre) {
-	const producto = BuscarProductosCocina(nombre);
-	estadoSeleccionCocina.ultimoProducto = producto;
+	const producto = window.BuscarProductosCocina(nombre);
 
 	if (producto.opcionesHuevo) {
-		const opcionHuevo = await mostrarOpciones(opcionesHuevo, `Opciones para ${nombre}`);
-		const extrasSeleccionados = await mostrarExtras(extrasHuevo, `Extras para ${opcionHuevo.nombre}`);
+		const opcionHuevo = await mostrarOpciones(window.opcionesHuevo, `Opciones para ${nombre}`);
+		const extrasSeleccionados = await mostrarExtras(window.extrasHuevo, `Extras para ${opcionHuevo.nombre}`);
 		estadoSeleccionCocina.opcionHuevo = opcionHuevo;
 
 		const itemOrden = crearItemOrden(producto, opcionHuevo, extrasSeleccionados);
@@ -255,7 +295,7 @@ async function agregarProducto(nombre) {
 	}
 
 	if (producto.opcionesEmpanada) {
-		const opcionEmpanada = await mostrarOpciones(opcionesEmpanada, `Opciones para ${nombre}`);
+		const opcionEmpanada = await mostrarOpciones(window.opcionesEmpanada, `Opciones para ${nombre}`);
 		estadoSeleccionCocina.opcionEmpanada = opcionEmpanada;
 
 		const itemOrden = crearItemOrden(producto, opcionEmpanada);
@@ -277,6 +317,6 @@ window.verHistorial = verHistorial;
 window.seleccionarColorBanderin = seleccionarColorBanderin;
 window.eliminarItemCocina = eliminarItemCocina;
 
-renderProductos(productosCocina, 'contenedorCocina');
+renderProductos(window.productosCocina, 'contenedorCocina');
 renderCarritoCocina();
     
