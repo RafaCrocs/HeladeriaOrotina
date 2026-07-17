@@ -70,7 +70,7 @@ const opcionesTamannos = ["Tamaño", "Pequeño", "Grande"];
 const opcionesLecheCafes = ["Tipo de Leche", "Regular", "Delactomy", "Semi Descremada", "Almendra", "Avena"];
 const opcionesLecheBatidos = ["Tipo de Leche", "Agua/Sin Leche", "Regular", "Delactomy", "Semi Descremada", "Almendra", "Avena"];
 const opcionesSaborizantes = ["Saborizante", "Sin Saborizante", "Vainilla", "Caramelo", "Crema Avellanas", "Crema Irlandesa", "Chocolate Oscuro", "Nuez", "Menta", "Amaretto"];
-const opcionesHelados = ["Helado", "Sin Helado", "Helado Vainilla", "Helado Chocolate", "Helado Fresa", "Helado Chocochips", "Helado Galleta", "Helado Ron Con Frutas", "Helado Caramelo Vainilla", "Helado Ron Con Pasas", "Helado Napolitano", "Helado Coco", "Helado FresaNieve", "Helado Naranja Piña", "Helado Combinado", "Helado Chicle"];
+const opcionesHelados = ["Helado", "Sin Helado", "Helado Vainilla", "Helado Chocolate", "Helado Fresa", "Helado Chocochips", "Helado Galleta", "Helado Ron Con Frutas", "Helado Caramelo Vainilla", "Helado Ron Con Pasas", "Helado Napolitano", "Helado Chocomenta", "Helado Naranja Piña", "Helado Combinado",];
 const opcionesMatcha = ["Matcha...", "Matcha Regular", "Matcha Mango", "Matcha Fresa"];
 const opcionesJugoVerde = ["Jugo Verde...", "En Agua", "En Limonada", "En jugo Naranja"];
 const opcionesSaborizantesNaturales = ["Saborizante Natural", "Sin Saborizante", "Piña", "Manzana Verde"];
@@ -83,7 +83,7 @@ const BatidoRapidoLeche = ["Numero de Batido...", "1", "2", "3", "4", "5"];
 const opcionesCrepa = ["Numero de Crepa...", "1", "2", "3", "4", "Personalizada"];
 const opcionesSiropes = ["Sirope...", "Sin Sirope", "Sirope Fresa", "Sirope Caramelo", "Sirope Chocolate"];
 const opcionesEspuma = ["Opcion de Espuma","Sin Espuma", "Espuma Coco", "Espuma Vainilla", "Monin Fresa", "Monin Mango", "Monin Maracuya", "Monin Pitahaya", "Otra Espuma"];
-const opcionesFrutas = ["Fruta...", "Sin Fruta", "Fresa", "Banano", "Arandano", "Sandia", "Melocoton", "Pitahaya"];
+const opcionesFrutas = ["Fruta...", "Sin Fruta", "Fresa", "Banano", "Arandano", "Sandia", "Melocoton"];
 const opcionesSiropesCrepa = ["Sirope...", "Sin sirope", "Leche Condensada", "Nutella", "Sirope Caramelo", "Sirope Chocolate", "Sirope Dulce de Leche"];
 
 
