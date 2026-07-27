@@ -62,35 +62,27 @@ function mostrarExtras(extras, titulo) {
 	const opcionesVentanaEmergente = abrirVentanaEmergente(titulo);
 
 	opcionesVentanaEmergente.innerHTML = `
-		<div class="opcionesVentanaEmergente" id="extrasHuevoContainer"></div>
-		<div class="accionesEmergente">
-			<button class="btnAgregar" id="btnTerminarExtras">TERMINAR</button>
+		<div class="extrasContainer" id="extrasHuevoContainer">
+			${extras.map((extra) => `
+				<button class="btnExtra" data-extra="${extra}">${extra}</button>
+			`).join('')}
 		</div>
+		<button class="btnTerminarExtras" id="btnTerminarExtras">CONFIRMAR</button>
 	`;
 
-	const extrasHuevoContainer = document.getElementById('extrasHuevoContainer');
-	extrasHuevoContainer.innerHTML = extras.map((extra) => `
-		<label for="${extra}" class="caja cajaExtraOpcion" data-extra="${extra}">
-			<p class="nombreProductos">${extra}</p>
-			<button class="btnAgregar btnExtraSeleccion" id="${extra}" value="${extra}">${extra}</button>
-		</label>
-	`).join('');
-
 	return new Promise((resolve) => {
-		const botonesExtras = extrasHuevoContainer.querySelectorAll('.btnExtraSeleccion');
+		const extrasHuevoContainer = document.getElementById('extrasHuevoContainer');
 		const botonTerminar = document.getElementById('btnTerminarExtras');
 
-		botonesExtras.forEach((boton) => {
+		extrasHuevoContainer.querySelectorAll('.btnExtra').forEach((boton) => {
 			boton.addEventListener('click', () => {
-				const caja = boton.closest('.caja');
-				caja.classList.toggle('agregado');
+				boton.classList.toggle('btnExtraActivo');
 			});
 		});
 
 		botonTerminar.addEventListener('click', () => {
-			const extrasSeleccionados = Array.from(extrasHuevoContainer.querySelectorAll('.caja.agregado'))
-				.map((caja) => caja.dataset.extra);
-
+			const extrasSeleccionados = Array.from(extrasHuevoContainer.querySelectorAll('.btnExtraActivo'))
+				.map((b) => b.dataset.extra);
 			cerrarVentanaEmergente();
 			resolve(extrasSeleccionados);
 		}, { once: true });
@@ -221,15 +213,6 @@ function enviarPedido() {
 
 	if (ordenCocina.length === 0) {
 		alert('Agrega productos antes de enviar el pedido.');
-		if (btnConfirmarEnvio) {
-			btnConfirmarEnvio.disabled = false;
-			btnConfirmarEnvio.innerText = 'Enviar Pedido';
-		}
-		return;
-	}
-
-	if (!estadoSeleccionCocina.colorBanderin) {
-		alert('Selecciona el color del banderin antes de enviar el pedido.');
 		if (btnConfirmarEnvio) {
 			btnConfirmarEnvio.disabled = false;
 			btnConfirmarEnvio.innerText = 'Enviar Pedido';
