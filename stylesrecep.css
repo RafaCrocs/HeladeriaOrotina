@@ -24,6 +24,11 @@
     width: fit-content;
 }
 
+.pedido-numero {
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
 .pedido-header{
     margin: 20px;
 }
@@ -125,6 +130,11 @@ th, td {
 .ventanaHistorial h2 {
     margin-bottom: 16px;
     text-align: center;
+}
+
+.ventanaHistorial > button:first-child {
+    display: block;
+    margin-left: auto;
 }
 
 .tiempo{

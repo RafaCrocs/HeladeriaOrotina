@@ -107,13 +107,6 @@ function escogerSiguienteColor() {
     return colores[contadorPedidos % colores.length];
 }
 
-const coloresBanderin = {
-    'Rojo': '#e74c3c',
-    'Azul': '#3498db',
-    'Verde': '#2ecc71',
-    'Amarillo': '#f1c40f',
-};
-
 function crearTablaPedido(pedido, id) {
     contadorPedidos++;
     const contenedor = document.getElementById('contenedorPedidos');
@@ -122,17 +115,15 @@ function crearTablaPedido(pedido, id) {
     divPedido.className = 'nuevoPedido';
     divPedido.dataset.id = id;
 
-    const colorBanderin = coloresBanderin[pedido.Banderin] || '#888';
-
     let htmlContent = `
         <div class="pedido-header">
             <h2 class="tiempo" data-timer="${id}">00:00</h2>
-            <h2>Pedido #${contadorPedidos}</h2>
-            <h3 style="color: ${colorBanderin}; font-size: 1.5em;">Banderin: ${pedido.Banderin || 'Sin banderin'}</h3>
+            <h2 class="pedido-numero">Pedido #${pedido.Numero || contadorPedidos}</h2>
         </div>
         <table class="tablaPedido" border="1">
             <thead class="tablaEncabezado" style="background-color: ${escogerSiguienteColor()};">
                 <tr>
+                    <th>Cant</th>
                     <th>Producto</th>
                     <th>Extras</th>
                 </tr>
@@ -146,6 +137,7 @@ function crearTablaPedido(pedido, id) {
             : 'Sin extras';
         htmlContent += `
             <tr>
+                <td>${item.Cantidad || 1}</td>
                 <td>${item.PedidoPrincipal || '-'}</td>
                 <td>${extras}</td>
             </tr>
@@ -155,6 +147,7 @@ function crearTablaPedido(pedido, id) {
     htmlContent += `
             </tbody>
         </table>
+        ${pedido.Nota ? `<p class="notaPedido"> Nota: ${pedido.Nota}</p>` : ''}
         <button class="btnListo" onclick="completarPedido(this)">
             Listoo!
         </button>
@@ -226,25 +219,21 @@ window.verHistorial = async function() {
         contenedor.innerHTML = '<p style="padding:20px;color:#555;">No hay pedidos completados hoy.</p>';
     } else {
         contenedor.innerHTML = ultimos10.map((pedido, index) => {
-            const colorBanderin = coloresBanderin[pedido.Banderin] || '#888';
             const filas = Array.isArray(pedido.Pedidos)
                 ? pedido.Pedidos.map(item => {
                     const extras = Array.isArray(item.Extra) && item.Extra.length > 0
                         ? item.Extra.join(', ')
                         : 'Sin extras';
-                    return `<tr><td>${item.PedidoPrincipal || '-'}</td><td>${extras}</td></tr>`;
+                    return `<tr><td>${item.Cantidad || 1}</td><td>${item.PedidoPrincipal || '-'}</td><td>${extras}</td></tr>`;
                 }).join('')
                 : '';
 
             return `
                 <div style="margin-bottom:16px; border:1px solid #ccc; padding:8px;">
-                    <p><strong>Pedido #${ultimos10.length - index}</strong> &nbsp;
-                        <span style="color:${colorBanderin};">Banderin: ${pedido.Banderin || '-'}</span>
-                        &nbsp; Hora: ${pedido.Hora || '-'}
-                    </p>
+                    <p><strong>Numero de Pedido: ${pedido.Numero || '-'}</strong> &nbsp; Hora: ${pedido.Hora || '-'}</p>
                     <table class="tablaPedido" border="1">
                         <thead class="tablaEncabezado" style="background-color:#ddd;">
-                            <tr><th>Producto</th><th>Extras</th></tr>
+                            <tr><th>Cant</th><th>Producto</th><th>Extras</th></tr>
                         </thead>
                         <tbody>${filas}</tbody>
                     </table>
