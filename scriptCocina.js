@@ -22,10 +22,10 @@ function renderProductos(productos, contenedor) {
 function renderOrdenesCocina(ordenes, contenedor) {
 	const section = document.getElementById(contenedor);
 	section.innerHTML = ordenes.map((producto) => `
-		<label class="caja" for="${producto.imagen}">
+		<label class="caja" for="${producto.nombre}">
 			<p class="nombreProductos">${producto.nombre}</p>
 			<div class="imagenPedido ${producto.imagen}"></div>
-			<button class="btnAgregar" id="${producto.imagen}" onclick="agregarProducto('${producto.nombre}')">AGREGAR</button>
+			<button class="btnAgregar" id="${producto.nombre}" onclick="agregarProducto('${producto.nombre}')">AGREGAR</button>
 		</label>
 	`).join('');
 }
@@ -134,6 +134,15 @@ function crearItemOrden(producto, opcionSeleccionada = null, extrasSeleccionados
 function agregarItemALaOrden(itemOrden) {
 	ordenCocina.push(itemOrden);
 	renderCarritoCocina();
+}
+
+function efectoAgregado(nombre) {
+    const botonClickeado = document.getElementById(nombre);
+    if (botonClickeado) {
+        const caja = botonClickeado.closest('.caja');
+        caja.classList.add('agregado');
+        setTimeout(() => caja.classList.remove('agregado'), 2000);
+    }
 }
 
 function renderCarritoCocina() {
@@ -289,6 +298,7 @@ async function agregarProducto(nombre) {
 
 		const itemOrden = crearItemOrden(producto, opcionHuevo, extrasSeleccionados);
 		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
 		return itemOrden;
 	}
 
@@ -298,6 +308,7 @@ async function agregarProducto(nombre) {
 
 		const itemOrden = crearItemOrden(producto, opcionEmpanada);
 		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
 		return itemOrden;
 	}
 	if (producto.opcionesEmpanadaArreglada) {
@@ -306,6 +317,7 @@ async function agregarProducto(nombre) {
 
 		const itemOrden = crearItemOrden(producto, opcionEmpanadaArreglada);
 		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
 		return itemOrden;
 	}
 	if (producto.opcionesSandwich) {
@@ -314,6 +326,7 @@ async function agregarProducto(nombre) {
 
 		const itemOrden = crearItemOrden(producto, opcionSandwich);
 		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
 		return itemOrden;
 	}
 
@@ -323,6 +336,7 @@ async function agregarProducto(nombre) {
 
 		const itemOrden = crearItemOrden(producto, opcionHamburguesa);
 		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
 		return itemOrden;
 	}
 	if(producto.tamannosPapasFritas) {
@@ -331,11 +345,14 @@ async function agregarProducto(nombre) {
 		
 		const itemOrden = crearItemOrden(producto, opcionTamannoPapasFritas);
 		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
 		return itemOrden;
 	}
 
 	const itemOrden = crearItemOrden(producto);
 	agregarItemALaOrden(itemOrden);
+	debugger;
+	efectoAgregado(nombre);
 	return itemOrden;
 }
 window.agregarProducto = agregarProducto;
