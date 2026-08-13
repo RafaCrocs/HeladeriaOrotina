@@ -429,11 +429,11 @@ async function agregarEspecial(nombre) {
         if(crepa === "Personalizada") {
             const helado = await mostrarOpcionesMultiples(opcionesHelados);
             const heladoSeleccionado = helado.length > 0 ? obtenerSegundasPalabras(helado).join(", ") : "Sin Helado";
-            bebidaEnProgreso.bebida += " Helados: " + heladoSeleccionado;
+            bebidaEnProgreso.leche += " Helados: " + heladoSeleccionado;
             
             const frutas = await mostrarOpcionesMultiples(opcionesFrutas);
             const frutasSeleccionadas = frutas.length > 0 ? frutas.join(", ") : "Sin Frutas";
-            bebidaEnProgreso.leche += " Frutas: " + frutasSeleccionadas;
+            bebidaEnProgreso.bebida += " Frutas: " + frutasSeleccionadas;
 
             const siropes = await mostrarOpcionesMultiples(opcionesSiropesCrepa);
             const siropesSeleccionados = siropes.length > 0 ? siropes.join(", ") : "Sin Sirope";

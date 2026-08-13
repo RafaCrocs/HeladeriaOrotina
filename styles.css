@@ -852,11 +852,14 @@ td{
     background-image: url('Imagenes/BubblePitahaya.png');
 }
 .Nutella{
-    background-image: url('Imagenes/Nutella.png');
+    background-image: url('Imagenes/nutella.png');
 }
 .LecheCondensada{
     background-image: url('Imagenes/LecheCondensada.png');
 }
 .SiropeDulcedeLeche{
     background-image: url('Imagenes/DulceDeLeche.png');
+}
+.HeladoChocomenta{
+    background-image: url('Imagenes/Chocomenta.png');
 }

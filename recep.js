@@ -88,6 +88,7 @@ async function iniciarEscuchaPedidos() {
     });
 }
 
+const timersActivos = new Map();
 
 function iniciarTimerPedido(pedidoId, elementoTiempo) {
     const inicio = Date.now();
