@@ -21,10 +21,15 @@ ordenesCocina = [
 
 opcionesHuevo = [
     { nombre: "Huevo Picado", imagen:"HuevoPicado" },
-    { nombre: "Huevo Frito", imagen:"HuevoFrito" },
+    { nombre: "Huevo Frito", imagen:"HuevoFrito", opcionesHuevoFrito: true },
     { nombre: "Torta de Huevo", imagen:"TortaHuevo" },
     { nombre: "Omelet", imagen:"Omelet" },
     { nombre: "Huevo Duro", imagen:"HuevoDuro" },
+]
+
+opcionesHuevoFrito = [
+    { nombre: "Tierno", imagen:"HuevoFritoTierno" },
+    { nombre: "Termino Medio", imagen:"HuevoFritoTerminoMedio" },
 ]
 
 

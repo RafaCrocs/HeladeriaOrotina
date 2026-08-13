@@ -292,7 +292,11 @@ async function enviarPedido() {
 async function agregarProducto(nombre) {
 	const producto = window.BuscarProductosCocina(nombre);
 	if (producto.opcionesHuevo) {
-		const opcionHuevo = await mostrarOpciones(window.opcionesHuevo, `Opciones para ${nombre}`);
+		let opcionHuevo = await mostrarOpciones(window.opcionesHuevo, `Opciones para ${nombre}`);
+		if (opcionHuevo.opcionesHuevoFrito) {
+			const termino = await mostrarOpciones(window.opcionesHuevoFrito, `Término para ${opcionHuevo.nombre}`);
+			opcionHuevo = { ...termino, nombre: `Huevo Frito ${termino.nombre}` };
+		}
 		const extrasSeleccionados = await mostrarExtras(window.extrasHuevo, `Extras para ${opcionHuevo.nombre}`);
 		estadoSeleccionCocina.opcionHuevo = opcionHuevo;
 
