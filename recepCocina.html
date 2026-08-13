@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest-recepcion.json">
+    <link rel="stylesheet" href="stylesrecep.css">
+    <script type="module" src="recepCocina.js" defer></script>
+    <title>Recepción</title>
+</head>
+<body>
+    <!--
+    <p class="infoVersion">v=1.0.0<br>Cocina Orotina</p>
+    <h1 class="header">Pedidos de Cocina</h1>
+    <button class="btnHistorial" onclick="verHistorial()">Historial</button>
+    <div id="contenedorPedidos" class="contenedor-pedidos">
+        <!-- Aquí se mostrarán los pedidos recibidos
+    </div>
+    -->
+
+    <nav class="navbar">
+        <p class="infoVersion">v=1.0.0<br>Cocina Orotina</p>
+        <h1>Pedidos de Cocina</h1>
+        <button class="btnHistorial" onclick="verHistorial()">Historial</button>
+    </nav>
+    <div id="contenedorPedidos" class="contenedor-pedidos">
+        <!-- Aquí se mostrarán los pedidos recibidos -->
+    </div>
+
+    <!-- Historial -->
+    <div class="mostrarHistorial" id="mostrarHistorial">
+        <div class="ventanaHistorial">
+            <button class="btnListo" onclick="cerrarHistorial()">Cerrar</button>
+            <h2>Últimos 10 pedidos completados</h2>
+            <div id="tablaContentHistorial"></div>
+        </div>
+    </div>
+</body>
+</html>

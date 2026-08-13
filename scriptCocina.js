@@ -1,3 +1,13 @@
+import { database, ref, set, push } from './firebase.js';
+import { get, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+function obtenerClaveDiaLocal() {
+	const fecha = new Date();
+	const opciones = { timeZone: 'America/Costa_Rica', year: 'numeric', month: '2-digit', day: '2-digit' };
+	const partesFecha = fecha.toLocaleDateString('es-CR', opciones).split('/');
+	return `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
+}
+
 function renderProductos(productos, contenedor) {
 	const section = document.getElementById(contenedor);
 	section.innerHTML = productos.map((producto) => `
@@ -9,15 +19,32 @@ function renderProductos(productos, contenedor) {
 	`).join('');
 }
 
+function renderOrdenesCocina(ordenes, contenedor) {
+	const section = document.getElementById(contenedor);
+	section.innerHTML = ordenes.map((producto) => `
+		<label class="caja" for="${producto.nombre}">
+			<p class="nombreProductos">${producto.nombre}</p>
+			<div class="imagenPedido ${producto.imagen}"></div>
+			<button class="btnAgregar" id="${producto.nombre}" onclick="agregarProducto('${producto.nombre}')">AGREGAR</button>
+		</label>
+	`).join('');
+}
+
 const estadoSeleccionCocina = {
-	ultimoProducto: null,
 	opcionHuevo: null,
 	opcionEmpanada: null,
-	ultimaOpcion: null,
-	colorBanderin: '',
 };
 
+let numeroPedidoActual = '...';
 const ordenCocina = [];
+
+async function cargarNumeroPedido() {
+	const diaClave = obtenerClaveDiaLocal();
+	const contadorRef = ref(database, `Orotina/Cocina/contador/${diaClave}`);
+	const snapshot = await get(contadorRef);
+	numeroPedidoActual = (snapshot.val() || 0) + 1;
+	renderCarritoCocina();
+}
 
 window.estadoSeleccionCocina = estadoSeleccionCocina;
 window.ordenCocina = ordenCocina;
@@ -62,35 +89,31 @@ function mostrarExtras(extras, titulo) {
 	const opcionesVentanaEmergente = abrirVentanaEmergente(titulo);
 
 	opcionesVentanaEmergente.innerHTML = `
-		<div class="opcionesVentanaEmergente" id="extrasHuevoContainer"></div>
-		<div class="accionesEmergente">
-			<button class="btnAgregar" id="btnTerminarExtras">TERMINAR</button>
+		<div class="extrasContainer" id="extrasHuevoContainer">
+			${extras.map((extra) => `
+				<button class="btnExtra" data-extra="${extra}">${extra}</button>
+			`).join('')}
 		</div>
 	`;
 
-	const extrasHuevoContainer = document.getElementById('extrasHuevoContainer');
-	extrasHuevoContainer.innerHTML = extras.map((extra) => `
-		<label for="${extra}" class="caja cajaExtraOpcion" data-extra="${extra}">
-			<p class="nombreProductos">${extra}</p>
-			<button class="btnAgregar btnExtraSeleccion" id="${extra}" value="${extra}">${extra}</button>
-		</label>
-	`).join('');
+	const accionesVentanaEmergente = document.getElementById('accionesVentanaEmergente');
+	accionesVentanaEmergente.innerHTML = `
+		<button class="btnTerminarExtras" id="btnTerminarExtras">CONFIRMAR</button>
+	`;
 
 	return new Promise((resolve) => {
-		const botonesExtras = extrasHuevoContainer.querySelectorAll('.btnExtraSeleccion');
+		const extrasHuevoContainer = document.getElementById('extrasHuevoContainer');
 		const botonTerminar = document.getElementById('btnTerminarExtras');
 
-		botonesExtras.forEach((boton) => {
+		extrasHuevoContainer.querySelectorAll('.btnExtra').forEach((boton) => {
 			boton.addEventListener('click', () => {
-				const caja = boton.closest('.caja');
-				caja.classList.toggle('agregado');
+				boton.classList.toggle('btnExtraActivo');
 			});
 		});
 
 		botonTerminar.addEventListener('click', () => {
-			const extrasSeleccionados = Array.from(extrasHuevoContainer.querySelectorAll('.caja.agregado'))
-				.map((caja) => caja.dataset.extra);
-
+			const extrasSeleccionados = Array.from(extrasHuevoContainer.querySelectorAll('.btnExtraActivo'))
+				.map((b) => b.dataset.extra);
 			cerrarVentanaEmergente();
 			resolve(extrasSeleccionados);
 		}, { once: true });
@@ -104,21 +127,35 @@ function crearItemOrden(producto, opcionSeleccionada = null, extrasSeleccionados
 		opcion: opcionSeleccionada ? opcionSeleccionada.nombre : producto.nombre,
 		imagen: opcionSeleccionada ? opcionSeleccionada.imagen : producto.imagen,
 		extras: [...extrasSeleccionados],
+		cantidad: 1,
 	};
 }
 
 function agregarItemALaOrden(itemOrden) {
 	ordenCocina.push(itemOrden);
-	estadoSeleccionCocina.ultimaOpcion = itemOrden;
 	renderCarritoCocina();
+}
+
+function efectoAgregado(nombre) {
+    const botonClickeado = document.getElementById(nombre);
+    if (botonClickeado) {
+        const caja = botonClickeado.closest('.caja');
+        caja.classList.add('agregado');
+        setTimeout(() => caja.classList.remove('agregado'), 2000);
+    }
 }
 
 function renderCarritoCocina() {
 	const carritoCards = document.getElementById('carritoCards');
 	const carritoVacio = document.getElementById('carritoVacio');
+	const displayNumero = document.getElementById('displayNumeroPedido');
 
 	if (!carritoCards || !carritoVacio) {
 		return;
+	}
+
+	if (displayNumero) {
+		displayNumero.textContent = `Pedido #${numeroPedidoActual}`;
 	}
 
 	carritoVacio.style.display = ordenCocina.length === 0 ? 'block' : 'none';
@@ -127,66 +164,35 @@ function renderCarritoCocina() {
 			<p class="nombreProductos">${item.opcion}</p>
 			<div class="imagenPedido ${item.imagen}"></div>
 			<div class="detalleCarrito">
-				<p class="textoSecundario">Base: ${item.producto}</p>
 				<p class="textoSecundario">Extras: ${item.extras.length ? item.extras.join(', ') : 'Sin extras'}</p>
 			</div>
-			<button class="btnCerrar btnEliminarItemCocina" onclick="eliminarItemCocina('${item.id}')">Eliminar</button>
+			<div class="cantidadCarrito">
+				<button class="btnCantidadCocina btnMenos" onclick="cambiarCantidadCocina('${item.id}', -1)">−</button>
+				<span class="cantidadNumero">${item.cantidad}</span>
+				<button class="btnCantidadCocina btnMas" onclick="cambiarCantidadCocina('${item.id}', 1)">+</button>
+			</div>
 		</article>
 	`).join('');
 }
 
-function eliminarItemCocina(idItem) {
+function cambiarCantidadCocina(idItem, delta) {
 	const indice = ordenCocina.findIndex((item) => item.id === idItem);
+	if (indice === -1) return;
 
-	if (indice === -1) {
-		return;
+	ordenCocina[indice].cantidad += delta;
+	if (ordenCocina[indice].cantidad <= 0) {
+		ordenCocina.splice(indice, 1);
 	}
-
-	ordenCocina.splice(indice, 1);
 	renderCarritoCocina();
-}
-
-function seleccionarColorBanderin(color) {
-	estadoSeleccionCocina.colorBanderin = color;
-
-	document.querySelectorAll('.btnColorBanderin').forEach((boton) => {
-		const estaActivo = boton.textContent.trim() === color;
-		boton.classList.toggle('activo', estaActivo);
-	});
-
-	const estadoBanderin = document.getElementById('estadoBanderin');
-	if (estadoBanderin) {
-		estadoBanderin.textContent = `Banderin seleccionado: ${color}`;
-	}
 }
 
 function limpiarPedidoCocina() {
 	ordenCocina.length = 0;
-	estadoSeleccionCocina.ultimoProducto = null;
 	estadoSeleccionCocina.opcionHuevo = null;
 	estadoSeleccionCocina.opcionEmpanada = null;
-	estadoSeleccionCocina.ultimaOpcion = null;
-	estadoSeleccionCocina.colorBanderin = '';
 
 	const notaPedido = document.getElementById('notaPedido');
-	const paraLlevar = document.getElementById('paraLlevar');
-	const estadoBanderin = document.getElementById('estadoBanderin');
-
-	if (notaPedido) {
-		notaPedido.value = '';
-	}
-
-	if (paraLlevar) {
-		paraLlevar.checked = false;
-	}
-
-	if (estadoBanderin) {
-		estadoBanderin.textContent = 'Sin color seleccionado';
-	}
-
-	document.querySelectorAll('.btnColorBanderin').forEach((boton) => {
-		boton.classList.remove('activo');
-	});
+	if (notaPedido) notaPedido.value = '';
 
 	renderCarritoCocina();
 }
@@ -195,10 +201,12 @@ function cerrarVentanaEmergente() {
 	const ventanaEmergente = document.getElementById('mostrarVentanaEmergente');
 	const tituloVentanaEmergente = document.getElementById('tituloVentanaEmergente');
 	const opcionesVentanaEmergente = document.getElementById('opcionesVentanaEmergente');
+	const accionesVentanaEmergente = document.getElementById('accionesVentanaEmergente');
 
 	ventanaEmergente.style.display = 'none';
 	tituloVentanaEmergente.textContent = '';
 	opcionesVentanaEmergente.innerHTML = '';
+	accionesVentanaEmergente.innerHTML = '';
 }
 
 function verCarrito() {
@@ -212,71 +220,201 @@ function cerrarCarrito() {
 	ventanaCarrito.style.display = 'none';
 }
 
-function enviarPedido() {
+async function enviarPedido() {
+	const btnConfirmarEnvio = document.getElementById('btnConfirmarEnvio');
+	if (btnConfirmarEnvio) {
+		if (btnConfirmarEnvio.disabled) return;
+		btnConfirmarEnvio.disabled = true;
+		btnConfirmarEnvio.innerText = 'Enviando...';
+	}
+
 	if (ordenCocina.length === 0) {
 		alert('Agrega productos antes de enviar el pedido.');
+		if (btnConfirmarEnvio) {
+			btnConfirmarEnvio.disabled = false;
+			btnConfirmarEnvio.innerText = 'Enviar Pedido';
+		}
 		return;
 	}
 
-	if (!estadoSeleccionCocina.colorBanderin) {
-		alert('Selecciona el color del banderin antes de enviar el pedido.');
-		return;
-	}
+	const diaClave = obtenerClaveDiaLocal();
+	const contadorRef = ref(database, `Orotina/Cocina/contador/${diaClave}`);
+	let numeroUsado = numeroPedidoActual;
+
+	await runTransaction(contadorRef, () => numeroUsado);
+
+	const horaCostaRica = new Date().toLocaleString('es-CR', {
+		timeZone: 'America/Costa_Rica',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: false,
+	});
+
+	const pedidos = ordenCocina.map((item) => ({
+		PedidoPrincipal: item.opcion,
+		Extra: [...item.extras],
+		Cantidad: item.cantidad,
+	}));
 
 	const pedido = {
-		colorBanderin: estadoSeleccionCocina.colorBanderin,
-		nota: document.getElementById('notaPedido')?.value || '',
-		paraLlevar: document.getElementById('paraLlevar')?.checked || false,
-		items: [...ordenCocina],
+		Numero: numeroUsado,
+		Hora: horaCostaRica,
+		Nota: document.getElementById('notaPedido')?.value.trim() || '',
+		Pedidos: pedidos,
 	};
 
-	console.log('Pedido cocina:', pedido);
-	alert(`Pedido listo con banderin ${pedido.colorBanderin}.`);
-	limpiarPedidoCocina();
-	cerrarCarrito();
-}
+	const pedidoRef = ref(database, 'Orotina/Cocina');
+	const nuevoPedido = push(pedidoRef);
 
-function verHistorial() {
-	alert('El historial de cocina todavia no esta disponible.');
+	set(nuevoPedido, pedido)
+		.then(async () => {
+			limpiarPedidoCocina();
+			cerrarCarrito();
+			await cargarNumeroPedido();
+		})
+		.catch((error) => {
+			console.error('Error al enviar pedido de cocina a Firebase:', error);
+			alert('No se pudo enviar el pedido. Intenta de nuevo.');
+		})
+		.catch((error) => {
+			console.error('Error al enviar pedido de cocina a Firebase:', error);
+			alert('No se pudo enviar el pedido. Intenta de nuevo.');
+		})
+		.finally(() => {
+			if (btnConfirmarEnvio) {
+				btnConfirmarEnvio.disabled = false;
+				btnConfirmarEnvio.innerText = 'Enviar Pedido';
+			}
+		});
 }
 
 async function agregarProducto(nombre) {
-	const producto = BuscarProductosCocina(nombre);
-	estadoSeleccionCocina.ultimoProducto = producto;
-
+	const producto = window.BuscarProductosCocina(nombre);
 	if (producto.opcionesHuevo) {
-		const opcionHuevo = await mostrarOpciones(opcionesHuevo, `Opciones para ${nombre}`);
-		const extrasSeleccionados = await mostrarExtras(extrasHuevo, `Extras para ${opcionHuevo.nombre}`);
+		let opcionHuevo = await mostrarOpciones(window.opcionesHuevo, `Opciones para ${nombre}`);
+		if (opcionHuevo.opcionesHuevoFrito) {
+			const termino = await mostrarOpciones(window.opcionesHuevoFrito, `Término para ${opcionHuevo.nombre}`);
+			opcionHuevo = { ...termino, nombre: `Huevo Frito ${termino.nombre}` };
+		}
+		const extrasSeleccionados = await mostrarExtras(window.extrasHuevo, `Extras para ${opcionHuevo.nombre}`);
 		estadoSeleccionCocina.opcionHuevo = opcionHuevo;
 
 		const itemOrden = crearItemOrden(producto, opcionHuevo, extrasSeleccionados);
 		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
 		return itemOrden;
 	}
 
 	if (producto.opcionesEmpanada) {
-		const opcionEmpanada = await mostrarOpciones(opcionesEmpanada, `Opciones para ${nombre}`);
+		const opcionEmpanada = await mostrarOpciones(window.opcionesEmpanada, `Opciones para ${nombre}`);
 		estadoSeleccionCocina.opcionEmpanada = opcionEmpanada;
 
 		const itemOrden = crearItemOrden(producto, opcionEmpanada);
 		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
+		return itemOrden;
+	}
+	if (producto.opcionesEmpanadaArreglada) {
+		const opcionEmpanadaArreglada = await mostrarOpciones(window.opcionesEmpanadaArreglada, `Opciones para ${nombre}`);
+		estadoSeleccionCocina.opcionEmpanadaArreglada = opcionEmpanadaArreglada;
+
+		const itemOrden = crearItemOrden(producto, opcionEmpanadaArreglada);
+		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
+		return itemOrden;
+	}
+	if (producto.opcionesSandwich) {
+		const opcionSandwich = await mostrarOpciones(window.opcionesSandwich, `Opciones para ${nombre}`);
+		estadoSeleccionCocina.opcionSandwich = opcionSandwich;
+
+		const itemOrden = crearItemOrden(producto, opcionSandwich);
+		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
+		return itemOrden;
+	}
+
+	if (producto.opcionesHamburguesa) {
+		const opcionHamburguesa = await mostrarOpciones(window.opcionesHamburguesa, `Opciones para ${nombre}`);
+		estadoSeleccionCocina.opcionHamburguesa = opcionHamburguesa;
+
+		const itemOrden = crearItemOrden(producto, opcionHamburguesa);
+		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
+		return itemOrden;
+	}
+	if(producto.tamannosPapasFritas) {
+		const opcionTamannoPapasFritas = await mostrarOpciones(window.tamannosPapasFritas, `Opciones para ${nombre}`);
+		estadoSeleccionCocina.opcionTamannoPapasFritas = opcionTamannoPapasFritas;
+		
+		const itemOrden = crearItemOrden(producto, opcionTamannoPapasFritas);
+		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
 		return itemOrden;
 	}
 
 	const itemOrden = crearItemOrden(producto);
 	agregarItemALaOrden(itemOrden);
+	debugger;
+	efectoAgregado(nombre);
 	return itemOrden;
 }
-
 window.agregarProducto = agregarProducto;
 window.cerrarVentanaEmergente = cerrarVentanaEmergente;
 window.verCarrito = verCarrito;
 window.cerrarCarrito = cerrarCarrito;
 window.enviarPedido = enviarPedido;
-window.verHistorial = verHistorial;
-window.seleccionarColorBanderin = seleccionarColorBanderin;
-window.eliminarItemCocina = eliminarItemCocina;
+window.cambiarCantidadCocina = cambiarCantidadCocina;
 
-renderProductos(productosCocina, 'contenedorCocina');
+window.cerrarHistorial = function() {
+	document.getElementById('mostrarHistorial').style.display = 'none';
+};
+
+window.verHistorial = async function() {
+	const diaClave = obtenerClaveDiaLocal();
+	const completadosRef = ref(database, `Orotina/Cocina/pedidosCompletados/${diaClave}`);
+	const snapshot = await get(completadosRef);
+
+	const pedidos = [];
+	snapshot.forEach((child) => {
+		pedidos.push({ id: child.key, ...child.val() });
+	});
+
+	const ultimos10 = pedidos.slice(-10).reverse();
+	const contenedor = document.getElementById('tablaContentHistorial');
+
+	if (ultimos10.length === 0) {
+		contenedor.innerHTML = '<p style="padding:20px;color:#555;">No hay pedidos completados hoy.</p>';
+	} else {
+		contenedor.innerHTML = ultimos10.map((pedido, index) => {
+			const filas = Array.isArray(pedido.Pedidos)
+				? pedido.Pedidos.map(item => {
+					const extras = Array.isArray(item.Extra) && item.Extra.length > 0
+						? item.Extra.join(', ')
+						: 'Sin extras';
+					return `<tr><td>${item.Cantidad || 1}</td><td>${item.PedidoPrincipal || '-'}</td><td>${extras}</td></tr>`;
+				}).join('')
+				: '';
+
+			return `
+				<div style="margin-bottom:16px; border:1px solid #ccc; padding:8px;">
+					<p><strong>Numero: ${pedido.Numero || '-'}</strong> &nbsp; Hora: ${pedido.Hora || '-'}</p>
+					<table class="tablaPedido" border="1">
+						<thead class="tablaEncabezado" style="background-color:#ddd;">
+							<tr><th>Cant</th><th>Producto</th><th>Extras</th></tr>
+						</thead>
+						<tbody>${filas}</tbody>
+					</table>
+				</div>
+			`;
+		}).join('');
+	}
+
+	document.getElementById('mostrarHistorial').style.display = 'flex';
+};
+
+renderProductos(window.productosCocina, 'contenedorCocina');
+renderOrdenesCocina(window.ordenesCocina, 'contenedorOrdenes');
 renderCarritoCocina();
+cargarNumeroPedido();
     

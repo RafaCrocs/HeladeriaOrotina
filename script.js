@@ -234,6 +234,12 @@ renderProductos(productos.cafes, "contenedorCafes");
 renderBatidos(productos.batidos, "contenedorBatidos");
 renderFrio(productos.frios, "contenedorFrios");
 renderEspeciales(productos.especiales, "contenedorEspeciales");
+debugger;
+
+if (new URLSearchParams(window.location.search).get('Origen') === 'Restaurante') {
+    const btnCocina = document.getElementById('btnCocina');
+    if (btnCocina) btnCocina.style.display = '';
+}
 
 // Expose functions to global scope for inline onclick handlers
 window.agregarCafe = agregarCafe;
