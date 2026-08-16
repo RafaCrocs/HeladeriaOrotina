@@ -133,7 +133,7 @@ function enviarPedido() {
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    const origen = urlParams.get('origen') || ""; // Obtener el origen desde los parámetros de la URL
+    const origen = urlParams.get('Origen') || ""; // Obtener el origen desde los parámetros de la URL
 
     const nombreCliente = document.getElementById("nombreCliente").value || "";
     const notaPedido = document.getElementById("notaPedido").value || "";
@@ -236,7 +236,7 @@ renderFrio(productos.frios, "contenedorFrios");
 renderEspeciales(productos.especiales, "contenedorEspeciales");
 debugger;
 
-if (new URLSearchParams(window.location.search).get('Origen') === 'Restaurante') {
+if ((new URLSearchParams(window.location.search).get('Origen') || '').trim().toLowerCase() === 'restaurante') {
     const btnCocina = document.getElementById('btnCocina');
     if (btnCocina) btnCocina.style.display = '';
 }

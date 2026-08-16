@@ -61,7 +61,7 @@ tamannosPapasFritas = [
 ]
 
 
-extrasHuevo = ["Con Olores", "Cebolla", "Tomate", "Jamon", "Tomate", "Queso"]
+extrasHuevo = ["Con Olores", "Cebolla", "Tomate", "Jamon", "Tocineta", "Queso"]
 
 
 function BuscarProductosCocina(nombre) {
