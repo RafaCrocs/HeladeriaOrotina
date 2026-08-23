@@ -30,11 +30,6 @@ function renderOrdenesCocina(ordenes, contenedor) {
 	`).join('');
 }
 
-const estadoSeleccionCocina = {
-	opcionHuevo: null,
-	opcionEmpanada: null,
-};
-
 let numeroPedidoActual = '...';
 const ordenCocina = [];
 
@@ -46,7 +41,6 @@ async function cargarNumeroPedido() {
 	renderCarritoCocina();
 }
 
-window.estadoSeleccionCocina = estadoSeleccionCocina;
 window.ordenCocina = ordenCocina;
 
 function abrirVentanaEmergente(titulo) {
@@ -188,8 +182,6 @@ function cambiarCantidadCocina(idItem, delta) {
 
 function limpiarPedidoCocina() {
 	ordenCocina.length = 0;
-	estadoSeleccionCocina.opcionHuevo = null;
-	estadoSeleccionCocina.opcionEmpanada = null;
 
 	const notaPedido = document.getElementById('notaPedido');
 	if (notaPedido) notaPedido.value = '';
@@ -240,6 +232,7 @@ async function enviarPedido() {
 	const diaClave = obtenerClaveDiaLocal();
 	const contadorRef = ref(database, `Orotina/Cocina/contador/${diaClave}`);
 	let numeroUsado = numeroPedidoActual;
+	let origenURL = new URLSearchParams(window.location.search).get('Origen') || '';
 
 	await runTransaction(contadorRef, () => numeroUsado);
 
@@ -259,6 +252,7 @@ async function enviarPedido() {
 
 	const pedido = {
 		Numero: numeroUsado,
+		Origen: origenURL,
 		Hora: horaCostaRica,
 		Nota: document.getElementById('notaPedido')?.value.trim() || '',
 		Pedidos: pedidos,
@@ -298,7 +292,6 @@ async function agregarProducto(nombre) {
 			opcionHuevo = { ...termino, nombre: `Huevo Frito ${termino.nombre}` };
 		}
 		const extrasSeleccionados = await mostrarExtras(window.extrasHuevo, `Extras para ${opcionHuevo.nombre}`);
-		estadoSeleccionCocina.opcionHuevo = opcionHuevo;
 
 		const itemOrden = crearItemOrden(producto, opcionHuevo, extrasSeleccionados);
 		agregarItemALaOrden(itemOrden);
@@ -308,7 +301,6 @@ async function agregarProducto(nombre) {
 
 	if (producto.opcionesEmpanada) {
 		const opcionEmpanada = await mostrarOpciones(window.opcionesEmpanada, `Opciones para ${nombre}`);
-		estadoSeleccionCocina.opcionEmpanada = opcionEmpanada;
 
 		const itemOrden = crearItemOrden(producto, opcionEmpanada);
 		agregarItemALaOrden(itemOrden);
@@ -317,7 +309,6 @@ async function agregarProducto(nombre) {
 	}
 	if (producto.opcionesEmpanadaArreglada) {
 		const opcionEmpanadaArreglada = await mostrarOpciones(window.opcionesEmpanadaArreglada, `Opciones para ${nombre}`);
-		estadoSeleccionCocina.opcionEmpanadaArreglada = opcionEmpanadaArreglada;
 
 		const itemOrden = crearItemOrden(producto, opcionEmpanadaArreglada);
 		agregarItemALaOrden(itemOrden);
@@ -326,7 +317,6 @@ async function agregarProducto(nombre) {
 	}
 	if (producto.opcionesSandwich) {
 		const opcionSandwich = await mostrarOpciones(window.opcionesSandwich, `Opciones para ${nombre}`);
-		estadoSeleccionCocina.opcionSandwich = opcionSandwich;
 
 		const itemOrden = crearItemOrden(producto, opcionSandwich);
 		agregarItemALaOrden(itemOrden);
@@ -336,7 +326,6 @@ async function agregarProducto(nombre) {
 
 	if (producto.opcionesHamburguesa) {
 		const opcionHamburguesa = await mostrarOpciones(window.opcionesHamburguesa, `Opciones para ${nombre}`);
-		estadoSeleccionCocina.opcionHamburguesa = opcionHamburguesa;
 
 		const itemOrden = crearItemOrden(producto, opcionHamburguesa);
 		agregarItemALaOrden(itemOrden);
@@ -345,7 +334,6 @@ async function agregarProducto(nombre) {
 	}
 	if(producto.tamannosPapasFritas) {
 		const opcionTamannoPapasFritas = await mostrarOpciones(window.tamannosPapasFritas, `Opciones para ${nombre}`);
-		estadoSeleccionCocina.opcionTamannoPapasFritas = opcionTamannoPapasFritas;
 		
 		const itemOrden = crearItemOrden(producto, opcionTamannoPapasFritas);
 		agregarItemALaOrden(itemOrden);

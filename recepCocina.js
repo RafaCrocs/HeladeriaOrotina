@@ -119,6 +119,7 @@ function crearTablaPedido(pedido, id) {
         <div class="pedido-header">
             <h2 class="tiempo" data-timer="${id}">00:00</h2>
             <h2 class="pedido-numero">Pedido #${pedido.Numero || contadorPedidos}</h2>
+            <h2 class="pedido-origen">Origen: ${pedido.Origen || ''}</h2>
         </div>
         <table class="tablaPedido" border="1">
             <thead class="tablaEncabezado" style="background-color: ${escogerSiguienteColor()};">

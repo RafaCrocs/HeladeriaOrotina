@@ -237,9 +237,7 @@ async function verHistorial(botonHistorial) {
                 tablaHistorialContent.innerHTML = '<tr><td colspan="7">No hay pedidos completados hoy.</td></tr>';
             } else {
                 tablaHistorialContent.innerHTML = ultimos10.map((pedido, indexPedido) => {
-                    const numeroPedido = pedido.Numero || (ultimos10.length - indexPedido);
                     const horaPedido = pedido.Hora || '-';
-                    const clientePedido = pedido.Cliente || 'Sin cliente';
                     const separador = `
                         <tr>
                             <td colspan="7" style="background:#f1f1f1; font-weight:700; text-align:left; padding:8px; border-top:2px solid #bdbdbd;">
@@ -286,16 +284,17 @@ function cerrarHistorial() {
     historialContainer.style.display = "none";
 }
 
+function moverCocina() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const origen = urlParams.get('Origen') || "Heladeria";
+    const nuevaURL = `Cocina.html?Origen=${encodeURIComponent(origen)}`;
+    window.location.href = nuevaURL;
+}
+
 renderProductos(productos.cafes, "contenedorCafes");
 renderBatidos(productos.batidos, "contenedorBatidos");
 renderFrio(productos.frios, "contenedorFrios");
 renderEspeciales(productos.especiales, "contenedorEspeciales");
-debugger;
-
-if ((new URLSearchParams(window.location.search).get('Origen') || '').trim().toLowerCase() === 'restaurante') {
-    const btnCocina = document.getElementById('btnCocina');
-    if (btnCocina) btnCocina.style.display = '';
-}
 
 // Expose functions to global scope for inline onclick handlers
 window.agregarCafe = agregarCafe;
@@ -312,6 +311,7 @@ window.disminuirCantidad = disminuirCantidad;
 window.eliminarDelCarrito = eliminarDelCarrito;
 window.verHistorial = verHistorial;
 window.cerrarHistorial = cerrarHistorial;
+window.moverCocina = moverCocina;
 
 
 
