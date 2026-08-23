@@ -23,7 +23,7 @@
             <li class="navBarItem"><button class="navBarLink btnCarrito" onclick="verCarrito()">CARRITO</button></li>
         </ul>
         
-        <button class="btnHistorial" onclick="verHistorial()">Historial</button>
+        <button class="btnHistorial" onclick="verHistorial(this)">Historial</button>
         
     </nav>
     <main>
@@ -120,8 +120,10 @@
         <div class="mostrarVentaEmergente" id="mostrarHistorial">
             <div class="ventaEmergente" id="ventaEmergente">
                 <h2>Historial de Pedidos</h2>
+                <button class="btnCerrar" onclick="cerrarHistorial()">Cerrar</button>
                 <table class="tablaCarrito" border="1">
                     <tr class="tableHeader">
+                        <th>Origen</th>
                         <th>Cantidad</th>
                         <th>Bebida</th>
                         <th>Leche</th>
@@ -132,7 +134,6 @@
                     <tbody id="tablaContentHistorial">
                     </tbody>
                 </table>
-                <button class="btnCerrar" onclick="cerrarHistorial()">Cerrar</button>
             </div>
         </div>
 

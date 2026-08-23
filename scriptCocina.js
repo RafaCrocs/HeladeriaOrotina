@@ -264,7 +264,7 @@ async function enviarPedido() {
 		Pedidos: pedidos,
 	};
 
-	const pedidoRef = ref(database, 'Orotina/Cocina');
+	const pedidoRef = ref(database, 'Orotina/Cocina/PedidosEnProceso');
 	const nuevoPedido = push(pedidoRef);
 
 	set(nuevoPedido, pedido)

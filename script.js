@@ -1,4 +1,12 @@
 import { database, ref, set, push } from "./firebase.js";
+import { get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+function obtenerClaveDiaLocal() {
+    const fecha = new Date();
+    const opciones = { timeZone: 'America/Costa_Rica', year: 'numeric', month: '2-digit', day: '2-digit' };
+    const partesFecha = fecha.toLocaleDateString('es-CR', opciones).split('/');
+    return `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
+}
 
 function renderProductos(productos, contenedor) {
     const section = document.getElementById(contenedor);
@@ -201,28 +209,76 @@ function enviarPedido() {
 }
 
 
-function verHistorial() {
-        console.log("Historial de Pedidos:", historialPedidos);
+async function verHistorial(botonHistorial) {
+        const tablaHistorialContent = document.getElementById("tablaContentHistorial");
         const historialContainer = document.getElementById("mostrarHistorial");
-        historialContainer.style.display = "block";
-        crearTablaHistorial();
-}
 
-function crearTablaHistorial() {
-    const tablaHistorialContent = document.getElementById("tablaContentHistorial");
-    const ultimosPedidos = historialPedidos.slice(-10);
-    tablaHistorialContent.innerHTML = ultimosPedidos.map(pedido => 
-        pedido.items.map(item => `
-            <tr>
-                <td>${item.cantidad || 1}</td>
-                <td>${item.bebida}</td>
-                <td>${item.leche || " - "}</td>
-                <td>${item.saborizante || " - "}</td>
-                <td>${pedido.cliente || " - "}</td>
-                <td>${item.notaEspecifica || pedido.nota || " - "}</td>
-            </tr>
-        `).join('')
-    ).join('');
+    const boton = botonHistorial || document.querySelector('.btnHistorial');
+    const textoOriginal = boton ? boton.innerText : "Historial";
+    if (boton) {
+        if (boton.disabled) return;
+        boton.disabled = true;
+        boton.innerText = "Cargando...";
+    }
+
+        const diaClave = obtenerClaveDiaLocal();
+        const completadosRef = ref(database, `Orotina/pedidosCompletados/${diaClave}`);
+
+        try {
+            const snapshot = await get(completadosRef);
+            const pedidos = [];
+            snapshot.forEach((child) => {
+                pedidos.push({ id: child.key, ...child.val() });
+            });
+
+            const ultimos10 = pedidos.slice(-10).reverse();
+
+            if (ultimos10.length === 0) {
+                tablaHistorialContent.innerHTML = '<tr><td colspan="7">No hay pedidos completados hoy.</td></tr>';
+            } else {
+                tablaHistorialContent.innerHTML = ultimos10.map((pedido, indexPedido) => {
+                    const numeroPedido = pedido.Numero || (ultimos10.length - indexPedido);
+                    const horaPedido = pedido.Hora || '-';
+                    const clientePedido = pedido.Cliente || 'Sin cliente';
+                    const separador = `
+                        <tr>
+                            <td colspan="7" style="background:#f1f1f1; font-weight:700; text-align:left; padding:8px; border-top:2px solid #bdbdbd;">
+                                Hora: ${horaPedido}
+                            </td>
+                        </tr>
+                    `;
+
+                    const filas = Array.isArray(pedido.Items)
+                        ? pedido.Items.map((item) => `
+                            <tr>
+                                <td>${pedido.Origen || ' Heladeria '}</td>
+                                <td>${item.cantidad || 1}</td>
+                                <td>${item.bebida || ' - '}</td>
+                                <td>${item.leche || ' - '}</td>
+                                <td>${item.saborizante || ' - '}</td>
+                                <td>${pedido.Cliente || ' - '}</td>
+                                <td>${item.notaEspecifica || pedido.Nota || ' - '}</td>
+                            </tr>
+                        `).join('')
+                        : '<tr><td colspan="7">Pedido sin ítems</td></tr>';
+
+                    return separador + filas;
+                }).join('');
+            }
+        } catch (error) {
+            console.error("Error al cargar historial desde Firebase:", error);
+            tablaHistorialContent.innerHTML = '<tr><td colspan="7">No se pudo cargar el historial.</td></tr>';
+        } finally {
+            if (boton) {
+                boton.disabled = false;
+                boton.innerText = textoOriginal;
+            }
+        }
+
+        historialContainer.style.display = "block";
+        historialContainer.scrollTop = 0;
+        const ventanaHistorial = historialContainer.querySelector('.ventaEmergente');
+        if (ventanaHistorial) ventanaHistorial.scrollTop = 0;
 }
 
 function cerrarHistorial() {

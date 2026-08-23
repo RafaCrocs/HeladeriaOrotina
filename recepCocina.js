@@ -48,7 +48,7 @@ window.onpopstate = function () {
 };
 
 async function iniciarEscuchaPedidos() {
-    const pedidosRef = ref(database, 'Orotina/Cocina');
+    const pedidosRef = ref(database, 'Orotina/Cocina/PedidosEnProceso');
 
     const snapshotInicial = await get(pedidosRef);
     snapshotInicial.forEach((snapshot) => {
