@@ -1,8 +1,8 @@
 productosCocina = [
     { nombre: "Huevo", imagen:"Huevo", opcionesHuevo: true },
-    { nombre: "Empanada", imagen:"Empanada", opcionesEmpanada: true },
-    { nombre: "Empanada Arreglada", imagen:"EmpanadaArreglada", opcionesEmpanadaArreglada: true },
-    { nombre: "Sandwich", imagen:"Sandwich", opcionesSandwich: true },
+    { nombre: "Empanada", imagen:"Empanada", heladeria:true, opcionesEmpanada: true },
+    { nombre: "Empanada Arreglada", imagen:"EmpanadaArreglada", heladeria: true, opcionesEmpanadaArreglada: true },
+    { nombre: "Sandwich", imagen:"Sandwich", heladeria: true, opcionesSandwich: true },
     { nombre: "Hamburguesa", imagen:"Hamburguesa", opcionesHamburguesa: true },
     { nombre: "Prensadas de Queso", imagen:"PrensadasQueso" }
 ]
@@ -11,12 +11,17 @@ ordenesCocina = [
     { nombre: "Orden Tostadas", imagen:"OrdenTostadas" },
     { nombre: "Orden Tortillas Blancas", imagen:"TortillasBlancas" },
     { nombre: "Tortilla Aliñada", imagen:"TortillaAliñada" },
-    { nombre: "Orden Pinto SIN Olores", imagen:"PintoSinOlores" },
+    { nombre: "Orden de Pinto", imagen:"PintoSinOlores", opcionesPinto: true },
     { nombre: "Orden Arroz Blanco", imagen:"ArrozBlanco" },
     { nombre: "Orden de Papas Fritas", imagen:"PapasFritas", tamannosPapasFritas: true },
     { nombre: "Orden de Tocineta", imagen:"OrdenTocineta" },
     { nombre: "Orden de Tomate", imagen:"OrdenTomate" },
     { nombre: "Orden de Pepino", imagen:"OrdenPepino" },
+    { nombre: "Orden de Queso", imagen:"OrdenQueso" },
+    { nombre: "Orden de platano maduro", imagen:"OrdenPlatanoMaduro" },
+    {nombre: "Orden de Chorizo", imagen:"OrdenChorizo"},
+    {nombre: "Orden de Salchichon", imagen:"OrdenSalchichon"},
+
 ]
 
 opcionesHuevo = [
@@ -30,6 +35,7 @@ opcionesHuevo = [
 opcionesHuevoFrito = [
     { nombre: "Tierno", imagen:"HuevoFritoTierno" },
     { nombre: "Termino Medio", imagen:"HuevoFritoTerminoMedio" },
+    { nombre: "Bien Cocido", imagen:"HuevoFritoBienCocido" },
 ]
 
 
@@ -58,6 +64,11 @@ opcionesHamburguesa = [
 tamannosPapasFritas = [
     { nombre: "Papas Fritas Pequeñas", imagen:"PapasFritasPequenas" },
     { nombre: "Papas Fritas Grandes", imagen:"PapasFritasGrandes" }
+]
+
+opcionesPinto = [
+    { nombre: "Pinto CON Olores", imagen:"PintoConOlores" },
+    { nombre: "Pinto SIN Olores", imagen:"PintoSinOlores" },
 ]
 
 

@@ -8,7 +8,11 @@ function obtenerClaveDiaLocal() {
 	return `${partesFecha[2]}-${partesFecha[1]}-${partesFecha[0]}`;
 }
 
-function renderProductos(productos, contenedor) {
+function renderProductos(productos, contenedor, origen) {
+	//Si origen es heladeria, filtra los productos que tengan heladeria: true
+	if (origen === "Heladeria") {
+		productos = productos.filter(producto => producto.heladeria);
+	}
 	const section = document.getElementById(contenedor);
 	section.innerHTML = productos.map((producto) => `
 		<label class="caja" for="${producto.imagen}">
@@ -19,7 +23,11 @@ function renderProductos(productos, contenedor) {
 	`).join('');
 }
 
-function renderOrdenesCocina(ordenes, contenedor) {
+function renderOrdenesCocina(ordenes, contenedor, origen) {
+	//Si origen es heladeria, filtra los productos que tengan heladeria: true
+	if (origen === "Heladeria") {
+		ordenes = ordenes.filter(producto => producto.heladeria);
+	}
 	const section = document.getElementById(contenedor);
 	section.innerHTML = ordenes.map((producto) => `
 		<label class="caja" for="${producto.nombre}">
@@ -340,6 +348,13 @@ async function agregarProducto(nombre) {
 		efectoAgregado(nombre);
 		return itemOrden;
 	}
+	if(producto.opcionesPinto) {
+		const opcionPinto = await mostrarOpciones(window.opcionesPinto, `Opciones para ${nombre}`);
+		const itemOrden = crearItemOrden(producto, opcionPinto);
+		agregarItemALaOrden(itemOrden);
+		efectoAgregado(nombre);
+		return itemOrden;
+	}
 
 	const itemOrden = crearItemOrden(producto);
 	agregarItemALaOrden(itemOrden);
@@ -347,12 +362,20 @@ async function agregarProducto(nombre) {
 	efectoAgregado(nombre);
 	return itemOrden;
 }
+
+function moverAHeladeria() {
+	const urlParams = new URLSearchParams(window.location.search);
+    const origen = urlParams.get('Origen') || "Heladeria";
+    const nuevaURL = `index.html?Origen=${encodeURIComponent(origen)}`;
+    window.location.href = nuevaURL;
+}
 window.agregarProducto = agregarProducto;
 window.cerrarVentanaEmergente = cerrarVentanaEmergente;
 window.verCarrito = verCarrito;
 window.cerrarCarrito = cerrarCarrito;
 window.enviarPedido = enviarPedido;
 window.cambiarCantidadCocina = cambiarCantidadCocina;
+window.moverAHeladeria = moverAHeladeria;
 
 window.cerrarHistorial = function() {
 	document.getElementById('mostrarHistorial').style.display = 'none';
@@ -362,6 +385,13 @@ window.verHistorial = async function() {
 	const diaClave = obtenerClaveDiaLocal();
 	const completadosRef = ref(database, `Orotina/Cocina/pedidosCompletados/${diaClave}`);
 	const snapshot = await get(completadosRef);
+
+	//"Cargado..." al darle click al boton de historial, mientras carga los datos
+	const btnHistorial = document.getElementById('btnHistorial');
+	if (btnHistorial) {
+		btnHistorial.disabled = true;
+		btnHistorial.innerText = 'Cargando...';
+	}
 
 	const pedidos = [];
 	snapshot.forEach((child) => {
@@ -374,13 +404,18 @@ window.verHistorial = async function() {
 	if (ultimos10.length === 0) {
 		contenedor.innerHTML = '<p style="padding:20px;color:#555;">No hay pedidos completados hoy.</p>';
 	} else {
-		contenedor.innerHTML = ultimos10.map((pedido, index) => {
+		contenedor.innerHTML = ultimos10.map((pedido) => {
 			const filas = Array.isArray(pedido.Pedidos)
 				? pedido.Pedidos.map(item => {
 					const extras = Array.isArray(item.Extra) && item.Extra.length > 0
 						? item.Extra.join(', ')
 						: 'Sin extras';
-					return `<tr><td>${item.Cantidad || 1}</td><td>${item.PedidoPrincipal || '-'}</td><td>${extras}</td></tr>`;
+					return `<tr>
+								<td>${pedido.Origen || ""}</td>
+								<td>${item.Cantidad || 1}</td>
+								<td>${item.PedidoPrincipal || '-'}</td>
+								<td>${extras}</td>
+							</tr>`;
 				}).join('')
 				: '';
 
@@ -389,7 +424,12 @@ window.verHistorial = async function() {
 					<p><strong>Numero: ${pedido.Numero || '-'}</strong> &nbsp; Hora: ${pedido.Hora || '-'}</p>
 					<table class="tablaPedido" border="1">
 						<thead class="tablaEncabezado" style="background-color:#ddd;">
-							<tr><th>Cant</th><th>Producto</th><th>Extras</th></tr>
+							<tr>
+								<th>Origen</th>
+								<th>Cant</th>
+								<th>Producto</th>
+								<th>Extras</th>
+							</tr>
 						</thead>
 						<tbody>${filas}</tbody>
 					</table>
@@ -399,10 +439,16 @@ window.verHistorial = async function() {
 	}
 
 	document.getElementById('mostrarHistorial').style.display = 'flex';
+	if (btnHistorial) {
+		btnHistorial.disabled = false;
+		btnHistorial.innerText = 'Historial';
+	}
 };
 
-renderProductos(window.productosCocina, 'contenedorCocina');
-renderOrdenesCocina(window.ordenesCocina, 'contenedorOrdenes');
+let origen = new URLSearchParams(window.location.search).get('Origen' ) || "Restaurante";
+
+renderProductos(window.productosCocina, 'contenedorCocina', origen);
+renderOrdenesCocina(window.ordenesCocina, 'contenedorOrdenes', origen);
 renderCarritoCocina();
 cargarNumeroPedido();
     

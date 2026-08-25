@@ -12,12 +12,12 @@
     
     <nav class="navBar">
         <p style="color: white;">v=1.0.6<br>Cocina Orotina</p>
-        <button class="btnCocina"><a href="index.html?Origen=Restaurante" class="cocinaLink">Heladeria</a></button>
+        <button class="btnCocina" onclick="moverAHeladeria()">Heladeria</button>
         <ul class="navBarList">
             
             <li class="navBarItem"><button class="navBarLink btnCarrito" onclick="verCarrito()">CARRITO</button></li>
         </ul>
-        <button class="btnHistorial" onclick="verHistorial()">Historial</button>
+        <button class="btnHistorial" id="btnHistorial" onclick="verHistorial()">Historial</button>
     </nav>
     <main>
 

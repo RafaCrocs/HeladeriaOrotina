@@ -114,12 +114,15 @@ function crearTablaPedido(pedido, id) {
     const divPedido = document.createElement('div');
     divPedido.className = 'nuevoPedido';
     divPedido.dataset.id = id;
+    if(pedido.Origen === 'Restaurante') {
+        pedido.Origen = null
+    }
 
     let htmlContent = `
         <div class="pedido-header">
             <h2 class="tiempo" data-timer="${id}">00:00</h2>
             <h2 class="pedido-numero">Pedido #${pedido.Numero || contadorPedidos}</h2>
-            <h2 class="pedido-origen">Origen: ${pedido.Origen || ''}</h2>
+            <h2 class="pedido-origen">${pedido.Origen || ''}</h2>
         </div>
         <table class="tablaPedido" border="1">
             <thead class="tablaEncabezado" style="background-color: ${escogerSiguienteColor()};">
@@ -166,7 +169,7 @@ function crearTablaPedido(pedido, id) {
 window.completarPedido = async function(boton) {
     const contenedorPedido = boton.closest('.nuevoPedido');
     const pedidoId = contenedorPedido.dataset.id;
-    const pedidoRef = ref(database, 'Orotina/Cocina/' + pedidoId);
+    const pedidoRef = ref(database, 'Orotina/Cocina/PedidosEnProceso/' + pedidoId);
 
     const snapshot = await get(pedidoRef);
     if (snapshot.exists()) {
@@ -225,7 +228,12 @@ window.verHistorial = async function() {
                     const extras = Array.isArray(item.Extra) && item.Extra.length > 0
                         ? item.Extra.join(', ')
                         : 'Sin extras';
-                    return `<tr><td>${item.Cantidad || 1}</td><td>${item.PedidoPrincipal || '-'}</td><td>${extras}</td></tr>`;
+                    return `<tr>
+                                <td>${pedido.Origen || ""}</td>
+                                <td>${item.Cantidad || 1}</td>
+                                <td>${item.PedidoPrincipal || '-'}</td>
+                                <td>${extras}</td>
+                            </tr>`;
                 }).join('')
                 : '';
 
@@ -234,7 +242,12 @@ window.verHistorial = async function() {
                     <p><strong>Numero de Pedido: ${pedido.Numero || '-'}</strong> &nbsp; Hora: ${pedido.Hora || '-'}</p>
                     <table class="tablaPedido" border="1">
                         <thead class="tablaEncabezado" style="background-color:#ddd;">
-                            <tr><th>Cant</th><th>Producto</th><th>Extras</th></tr>
+                            <tr>
+                                <th>Origen</th>
+                                <th>Cant</th>
+                                <th>Producto</th>
+                                <th>Extras</th>
+                            </tr>
                         </thead>
                         <tbody>${filas}</tbody>
                     </table>

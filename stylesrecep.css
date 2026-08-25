@@ -140,3 +140,8 @@ th, td {
 .tiempo{
     text-align: right;
 }
+
+.pedido-origen {
+    font-size: 1.5rem;
+    color: #ff2222;
+}
